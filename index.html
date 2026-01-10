@@ -1,118 +1,118 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
-<title>兔兔文法討伐團 - 動畫加強版</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
+    
+    <link rel="apple-touch-icon" href="https://lunakuo1719.github.io/kana-wunfa/nanaicon.jpg">
+    <meta name="apple-mobile-web-app-title" content="文法討伐團">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-<style>
-:root {
-    --kanahei-pink: #fce4ec; 
-    --kanahei-rose: #f06292; 
-    --kanahei-brown: #6d4c41; 
-    --kanahei-cream: #fff9c4; 
-    --kanahei-correct: #ff80ab; 
-}
+    <title>文法討伐團~捏！</title>
+    <style>
+        :root {
+            --kanahei-pink: #fce4ec; 
+            --kanahei-rose: #f06292; 
+            --kanahei-brown: #6d4c41; 
+            --kanahei-cream: #fff9c4; 
+            --kanahei-correct: #ff80ab; 
+            --morandi-mint: #b2cecf;   
+            --morandi-text: #5a7677;   
+        }
 
-* { box-sizing: border-box; font-family: 'openhuninn', sans-serif; font-weight: 900; }
+        * { box-sizing: border-box; font-family: 'Arial', sans-serif; font-weight: 900; }
 
-body { margin: 0; padding: 10px; background-color: var(--kanahei-pink); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        body { margin: 0; padding: 10px; background-color: var(--kanahei-pink); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
 
-.card {
-    width: 100%; max-width: 500px; background: white;
-    border: 6px solid var(--kanahei-brown);
-    border-radius: 45px; padding: 25px;
-    box-shadow: 0px 12px 0px var(--kanahei-rose);
-    position: relative; text-align: center;
-    z-index: 10;
-}
+        .card {
+            width: 100%; max-width: 500px; background: white;
+            border: 6px solid var(--kanahei-brown);
+            border-radius: 45px; padding: 25px;
+            box-shadow: 0px 12px 0px var(--kanahei-rose);
+            position: relative; text-align: center;
+            z-index: 10; max-height: 90vh; overflow-y: auto;
+        }
 
-/* 右上角 Home 按鈕 */
-.home-btn { position: absolute; top: 20px; right: 20px; width: 45px; cursor: pointer; z-index: 100; }
-.home-btn img { width: 100%; height: auto; }
+        .main-header-gif { width: 100px; margin-bottom: 5px; }
 
-/* 進度條與 P助跑步容器 */
-.progress-container { position: relative; height: 60px; margin-top: 10px; }
-.piske-runner { 
-    position: absolute; bottom: 15px; left: 0%; 
-    width: 40px; height: 40px; transition: left 0.4s ease;
-    margin-left: -20px; /* 修正 P助中心點 */
-}
-.bar-outer { position: absolute; bottom: 0; width: 100%; height: 16px; background: var(--kanahei-cream); border: 3px solid var(--kanahei-brown); border-radius: 10px; overflow: hidden; }
-.bar-inner { height: 100%; width: 0%; background: var(--kanahei-correct); transition: width 0.4s; }
+        .home-btn { position: absolute; top: 15px; right: 15px; width: 50px; cursor: pointer; z-index: 100; }
+        .home-btn img { width: 100%; height: auto; }
 
-/* 兔兔加油站 (答題回饋圖) */
-.usagi-feedback { 
-    position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
-    width: 100px; opacity: 0; transition: 0.3s; pointer-events: none;
-}
-.show-usagi { opacity: 1; top: -100px; }
+        .progress-container { position: relative; height: 80px; margin-top: 10px; }
+        .piske-runner { 
+            position: absolute; bottom: 25px; left: 0%; 
+            width: 50px; height: 50px; transition: left 0.4s ease;
+            margin-left: -25px; z-index: 2;
+        }
+        .bar-outer { position: absolute; bottom: 10px; width: 100%; height: 16px; background: var(--kanahei-cream); border: 3px solid var(--kanahei-brown); border-radius: 10px; overflow: hidden; }
+        .bar-inner { height: 100%; width: 0%; background: var(--kanahei-rose); transition: width 0.4s; }
 
-/* 選項與翻譯 */
-.btn-choice { background: white; margin-bottom: 12px; font-size: 19px; border: 3px solid var(--kanahei-brown); border-radius: 22px; width: 100%; padding: 16px; text-align: left; display: block; cursor: pointer; color: var(--kanahei-brown); }
-.choice-correct { background-color: var(--kanahei-correct) !important; color: white !important; }
-.text-reveal-correct { color: #e91e63 !important; transform: scale(1.05); }
-.translation-box { background: #fff8e1; padding: 15px; border-radius: 20px; margin-top: 10px; font-size: 18px; text-align: left; border: 3px dashed var(--kanahei-rose); }
+        .btn-choice { background: white; margin-bottom: 12px; font-size: 18px; border: 3px solid var(--kanahei-brown); border-radius: 20px; width: 100%; padding: 14px; text-align: left; display: block; cursor: pointer; color: var(--kanahei-brown); }
+        .choice-correct-mint { background-color: var(--morandi-mint) !important; color: var(--morandi-text) !important; border-color: var(--morandi-text) !important; }
+        .choice-reveal-pink { background-color: var(--kanahei-correct) !important; color: white !important; }
 
-/* 愛心動畫 */
-.heart { position: fixed; font-size: 25px; color: var(--kanahei-rose); pointer-events: none; z-index: 999; animation: fall linear forwards; }
-@keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+        /* 貼紙簿樣式 */
+        .sticker-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        .sticker-item { width: 100%; aspect-ratio: 1/1; background: #eee; border-radius: 15px; border: 2px dashed #ccc; overflow: hidden; position: relative; }
+        .sticker-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); opacity: 0.3; }
+        .sticker-item.unlocked { border: 2px solid var(--kanahei-rose); background: white; }
+        .sticker-item.unlocked img { filter: none; opacity: 1; }
 
-.hidden { display: none; }
-.main-btn { padding: 15px 40px; font-size: 22px; border-radius: 35px; background: var(--kanahei-rose); color: white; border: 4px solid var(--kanahei-brown); cursor: pointer; box-shadow: 0 6px 0 var(--kanahei-brown); }
-</style>
+        .hidden { display: none; }
+        .main-btn { padding: 12px 25px; font-size: 18px; border-radius: 30px; background: var(--kanahei-rose); color: white; border: 4px solid var(--kanahei-brown); cursor: pointer; box-shadow: 0 4px 0 var(--kanahei-brown); margin: 5px; }
+        .translation-box { background: #fff8e1; padding: 12px; border-radius: 15px; margin-top: 10px; font-size: 16px; border: 2px dashed var(--kanahei-rose); }
+    </style>
 </head>
 <body>
 
 <div class="card">
     <div id="home-icon" class="home-btn hidden" onclick="goHome()">
-        <img src="https://img.icons8.com/color/96/home--v1.png" alt="Home">
+        <img src="https://lunakuo1719.github.io/kana-wunfa/back_01.png" alt="Back">
     </div>
 
-    <img id="usagi-act" src="" class="usagi-feedback">
-
     <div id="dashboard">
-        <h2 style="color: var(--kanahei-rose); font-size: 30px;">兔兔文法討伐團</h2>
-        <div style="font-size: 50px; margin: 20px;">🐰🍭🐥</div>
-        <div style="background: var(--kanahei-cream); padding: 15px; border-radius: 20px; border: 3px solid var(--kanahei-brown); margin-bottom: 20px;">
-            <p>已熟練題數：<span id="mastered-count">0</span></p>
-            <p>目前關卡：Level <span id="current-level-display">1</span></p>
+        <img src="https://lunakuo1719.github.io/kana-wunfa/nana01.gif" class="main-header-gif">
+        <h2 style="color: var(--kanahei-rose); margin:0;">文法討伐團~捏！</h2>
+        <div style="background: var(--kanahei-cream); padding: 10px; border-radius: 15px; border: 3px solid var(--kanahei-brown); margin: 15px 0;">
+            <p>已熟練：<span id="mastered-count">0</span> | 關卡：<span id="lv-display">1</span></p>
+            <p>錯題：<span id="failed-count">0</span> | 貼紙：<span id="sticker-count">0</span>/17</p>
         </div>
-        <button class="main-btn" onclick="startCurrentLevel()">開始討伐！</button>
+        <button class="main-btn" onclick="startLevel()">開始討伐！</button><br>
+        <button id="retry-btn" class="main-btn hidden" style="background:#b2cecf;" onclick="startRetry()">錯題補考</button><br>
+        <button class="main-btn" style="background:#ffd54f;" onclick="showBook()">收集冊</button>
     </div>
 
     <div id="game-zone" class="hidden">
-        <div style="text-align: left;">
-            <div style="background: var(--kanahei-rose); color: white; display: inline-block; padding: 3px 15px; border-radius: 15px;">Level <span id="level-num">1</span></div>
-        </div>
-        
         <div class="progress-container">
-            <img id="piske-img" src="https://img.icons8.com/color/96/bird.png" class="piske-runner">
+            <img id="piske-img" src="https://lunakuo1719.github.io/kana-wunfa/timeline.gif" class="piske-runner">
             <div class="bar-outer"><div class="bar-inner" id="progress-bar"></div></div>
+            <span style="font-size:12px;">進度：<span id="progress-num">0</span> / <span id="total-num">20</span></span>
         </div>
-        
-        <div class="word-text" id="q-text" style="text-align:left; font-size:22px; margin:15px 0;"></div>
+        <div id="q-text" style="text-align:left; font-size:20px; margin:15px 0;"></div>
         <div id="choices-area"></div>
-        
-        <div id="hint-area" class="translation-box hidden">
-            <span id="hint-text"></span>
-        </div>
+        <div id="hint-area" class="translation-box hidden"><span id="hint-text"></span></div>
+    </div>
+
+    <div id="book-zone" class="hidden">
+        <h3 style="color: var(--kanahei-rose);">我的貼紙收集冊</h3>
+        <div class="sticker-grid" id="sticker-grid"></div>
+        <button class="main-btn" onclick="goHome()">回首頁</button>
     </div>
 
     <div id="finish-zone" class="hidden">
-        <div style="font-size: 60px;">🏆</div>
-        <h2 style="color: var(--kanahei-rose);">本組攻略成功！</h2>
-        <button class="main-btn" onclick="nextLevel()">挑戰下一組</button>
+        <div style="font-size: 50px;">🎊</div>
+        <h2 id="finish-msg">攻略成功！</h2>
+        <div id="new-sticker-alert" class="hidden">
+            <p style="color:red;">解鎖了新貼紙！</p>
+            <img id="unlocked-img" src="" style="width:100px; border:3px solid var(--kanahei-brown); border-radius:10px;">
+        </div>
+        <button class="main-btn" onclick="goHome()">繼續努力！</button>
     </div>
 </div>
 
 <script>
-// 圖片網址配置區 (之後妳可以自行換成卡娜赫拉的圖)
-const IMGS = {
-    usagi_happy: "https://img.icons8.com/color/96/rabbit.png", // 答對時出現的兔兔
-    usagi_sad: "https://img.icons8.com/color/96/sad-rabbit.png",  // 答錯時出現的兔兔
-    piske: "https://img.icons8.com/color/96/bird.png"          // 進度條上的 P助
-};
+const STICKERS = Array.from({length: 17}, (_, i) => `https://lunakuo1719.github.io/kana-wunfa/stickers/badge_${String(i+1).padStart(2, '0')}.jpg`);
 
 const allQuestions = [
     { q: "This is _______ elephant.", opts: ["a", "an", "X", "the"], a: "an", note: "中文翻譯：這是一隻大象。" },
@@ -133,51 +133,6 @@ const allQuestions = [
     { q: "I am _______ teacher.", opts: ["he", "me", "they", "his"], a: "his", note: "中文翻譯：我是他的老師。" },
     { q: "He is _______ teacher.", opts: ["mine", "my", "yours", "hers"], a: "my", note: "中文翻譯：他是我的老師。" },
     { q: "We are talking _______ the book.", opts: ["in", "about", "on", "under"], a: "about", note: "中文翻譯：我們正在說那本書。" },
-    { q: "_______ can fly.", opts: ["Dogs", "Cats", "Birds", "Fish"], a: "Birds", note: "中文翻譯：鳥會飛。" },
-    { q: "I drank _______ for breakfast.", opts: ["milk", "books", "theaters", "rabbits"], a: "milk", note: "中文翻譯：我喝牛奶當早餐。" },
-    { q: "I have two _______.", opts: ["eyes", "nose", "mouth", "face"], a: "eyes", note: "中文翻譯：我有兩隻眼睛。" },
-    { q: "He _______ three sisters.", opts: ["is", "are", "has", "have"], a: "has", note: "中文翻譯：他有三個姐妹。" },
-    { q: "They _______ three brothers.", opts: ["is", "are", "has", "have"], a: "have", note: "中文翻譯：他們有三個兄弟。" },
-    { q: "My father _______ a car.", opts: ["has", "have", "is", "are"], a: "has", note: "中文翻譯：我父親有一輛車。" },
-    { q: "The boy _______ a kite.", opts: ["has", "have", "is", "are"], a: "has", note: "中文翻譯：男孩有一隻風箏。" },
-    { q: "The boys _______ a kite.", opts: ["has", "have", "is", "are"], a: "have", note: "中文翻譯：男孩們有一隻風箏。" },
-    { q: "A bird _______ two wings.", opts: ["has", "have", "is", "are"], a: "has", note: "中文翻譯：一隻鳥有兩隻翅膀。" },
-    { q: "Birds _______ wings.", opts: ["has", "have", "is", "are"], a: "have", note: "中文翻譯：鳥有翅膀。" },
-    { q: "He _______ my friend.", opts: ["is", "are", "am", "be"], a: "is", note: "中文翻譯：他是我的朋友。" },
-    { q: "We _______ friends.", opts: ["is", "are", "am", "be"], a: "are", note: "中文翻譯：我們是朋友。" },
-    { q: "I _______ hungry.", opts: ["is", "are", "am", "be"], a: "am", note: "中文翻譯：我餓了。" },
-    { q: "The cats _______ hungry.", opts: ["is", "are", "am", "be"], a: "are", note: "中文翻譯：貓餓了。" },
-    { q: "He _______ go to school.", opts: ["don't", "doesn't", "isn't", "aren't"], a: "doesn't", note: "中文翻譯：他不上學。" },
-    { q: "They _______ go to school.", opts: ["don't", "doesn't", "isn't", "aren't"], a: "don't", note: "中文翻譯：他們不上學。" },
-    { q: "He _______ like to play tennis.", opts: ["don't", "doesn't", "isn't", "aren't"], a: "doesn't", note: "中文翻譯：他不喜歡打網球。" },
-    { q: "I _______ like to play tennis.", opts: ["don't", "doesn't", "isn't", "aren't"], a: "don't", note: "中文翻譯：我不喜歡打網球。" },
-    { q: "We _______ like to play tennis.", opts: ["don't", "doesn't", "isn't", "aren't"], a: "don't", note: "中文翻譯：我們不喜歡打網球。" },
-    { q: "The boy _______ like to play tennis.", opts: ["don't", "doesn't", "isn't", "aren't"], a: "doesn't", note: "中文翻譯：那個男孩不喜歡打網球。" },
-    { q: "The boys _______ like to play tennis.", opts: ["don't", "doesn't", "isn't", "aren't"], a: "don't", note: "中文翻譯：那些男孩不喜歡打網球。" },
-    { q: "It _______ rain in winter.", opts: ["don't", "doesn't", "isn't", "aren't"], a: "doesn't", note: "中文翻譯：冬天不下雨。" },
-    { q: "He _______ very tall.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：他很高。" },
-    { q: "They _______ very tall.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：他們很高。" },
-    { q: "I _______ a tall boy.", opts: ["am", "is", "are", "be"], a: "am", note: "中文翻譯：我是一個高個子的男孩。" },
-    { q: "He _______ a tall boy.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：他是一個高個子的男孩。" },
-    { q: "I _______ hot.", opts: ["am", "is", "are", "be"], a: "am", note: "中文翻譯：我很熱。" },
-    { q: "He _______ hot.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：他很熱。" },
-    { q: "They _______ hot.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：他們很熱。" },
-    { q: "I _______ thirsty.", opts: ["am", "is", "are", "be"], a: "am", note: "中文翻譯：我渴了。" },
-    { q: "He _______ thirsty.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：他渴了。" },
-    { q: "They _______ thirsty.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：他們渴了。" },
-    { q: "We _______ thirsty.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：我們渴了。" },
-    { q: "It _______ hot today.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：今天天氣熱。" },
-    { q: "It _______ cold today.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：今天天氣冷。" },
-    { q: "The water _______ cold.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：水是冷的。" },
-    { q: "The flowers _______ beautiful.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：花是漂亮的。" },
-    { q: "The book _______ new.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：這本書是新的。" },
-    { q: "The books _______ new.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：這些書是新的。" },
-    { q: "He _______ my brother.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：他是我的兄弟。" },
-    { q: "They _______ my brothers.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：他們是我的兄弟。" },
-    { q: "She _______ my sister.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：她是我的姐妹。" },
-    { q: "They _______ my sisters.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：她們是我的姐妹。" },
-    { q: "I _______ happy.", opts: ["am", "is", "are", "be"], a: "am", note: "中文翻譯：我很快樂。" },
-    { q: "He _______ happy.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：他很快樂。" },
     { q: "They _______ happy.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：他們很快樂。" },
     { q: "I _______ sad.", opts: ["am", "is", "are", "be"], a: "am", note: "中文翻譯：我很憂傷。" },
     { q: "He _______ sad.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：他很憂傷。" },
@@ -204,154 +159,173 @@ const allQuestions = [
     { q: "This _______ a desk.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：這是一張書桌。" },
     { q: "These _______ desks.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：這些是書桌。" },
     { q: "That _______ a chair.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：那是一張椅子。" },
-    { q: "Those _______ chairs.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：那些是椅子。" },
-    { q: "The pen _______ blue.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：這枝筆是藍色的。" },
-    { q: "The pens _______ blue.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：這些筆是藍色的。" },
-    { q: "I _______ in the room.", opts: ["am", "is", "are", "be"], a: "am", note: "中文翻譯：我在房間裡。" },
-    { q: "He _______ in the room.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：他在房間裡。" },
-    { q: "They _______ in the room.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：他們在房間裡。" },
-    { q: "My father _______ in the room.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：我父親在房間裡。" },
-    { q: "The book _______ on the table.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：這本書在桌子上。" },
-    { q: "The books _______ on the table.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：這些書在桌子上。" },
-    { q: "The cat _______ under the table.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：這隻貓在桌子下面。" },
-    { q: "The cats _______ under the table.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：這些貓在桌子下面。" },
-    { q: "I _______ ten years old.", opts: ["am", "is", "are", "be"], a: "am", note: "中文翻譯：我十歲。" },
-    { q: "He _______ eleven years old.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：他十一歲。" },
-    { q: "They _______ twelve years old.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：他們十二歲。" },
-    { q: "I _______ busy.", opts: ["am", "is", "are", "be"], a: "am", note: "中文翻譯：我很忙。" },
-    { q: "He _______ busy.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：他很忙。" },
-    { q: "They _______ busy.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：他們很忙。" },
-    { q: "We _______ busy.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：我們很忙。" },
-    { q: "I _______ tired.", opts: ["am", "is", "are", "be"], a: "am", note: "中文翻譯：我很累。" },
-    { q: "She _______ tired.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：她很累。" },
-    { q: "They _______ tired.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：他們很累。" },
-    { q: "We _______ tired.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：我們很累。" },
-    { q: "My mother _______ busy.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：我母親很忙。" },
-    { q: "My sisters _______ busy.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：我的姐妹們很忙。" },
-    { q: "I _______ sorry.", opts: ["am", "is", "are", "be"], a: "am", note: "中文翻譯：我很抱歉。" },
-    { q: "He _______ sorry.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：他很抱歉。" },
-    { q: "They _______ sorry.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：他們很抱歉。" },
-    { q: "The apple _______ red.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：這顆蘋果是紅色的。" },
-    { q: "The apples _______ red.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：這些蘋果是紅色的。" },
-    { q: "The sky _______ blue.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：天空是藍色的。" },
-    { q: "The stars _______ bright.", opts: ["am", "is", "are", "be"], a: "are", note: "中文翻譯：星星是明亮的。" },
-    { q: "The sun _______ bright.", opts: ["am", "is", "are", "be"], a: "is", note: "中文翻譯：太陽是明亮的。" },
+    { q: "Those _______ chairs.", opts: ["am", "is", "are", "be"], a: "are", note: "那些是椅子。" },
+    { q: "The pen _______ blue.", opts: ["am", "is", "are", "be"], a: "is", note: "這枝筆是藍色的。" },
+    { q: "The pens _______ blue.", opts: ["am", "is", "are", "be"], a: "are", note: "這些筆是藍色的。" },
+    { q: "I _______ in the room.", opts: ["am", "is", "are", "be"], a: "am", note: "我在房間裡。" },
+    { q: "He _______ in the room.", opts: ["am", "is", "are", "be"], a: "is", note: "他在房間裡。" },
+    { q: "They _______ in the room.", opts: ["am", "is", "are", "be"], a: "are", note: "他們在房間裡。" },
+    { q: "My father _______ in the room.", opts: ["am", "is", "are", "be"], a: "is", note: "我父親在房間裡。" },
+    { q: "The book _______ on the table.", opts: ["am", "is", "are", "be"], a: "is", note: "這本書在桌子上。" },
+    { q: "He swims every morning.", opts: ["He swims every morning.", "He is swimming every morning.", "He swim every morning.", "He swimming every morning."], a: "He swims every morning.", note: "習慣用現在簡單式。" },
+    { q: "He is writing a letter at present.", opts: ["He is writing a letter at present.", "He writing a letter at present.", "He writes a letter at present.", "He is write a letter at present."], a: "He is writing a letter at present.", note: "at present 使用現在進行式。" },
+    { q: "He talks to his mother now.", opts: ["He talks to his mother now.", "He is talking to his mother now.", "He talking to his mother now.", "He talk to his mother now."], a: "He is talking to his mother now.", note: "now 使用現在進行式。" },
+    { q: "I swim every day.", opts: ["I am swim every day.", "I swim every day.", "I swimming every day.", "I am swimming every day."], a: "I swim every day.", note: "I 搭配原形動詞。" },
+    { q: "I walked to school when I was a kid.", opts: ["I walked to school when I was a kid.", "I walk to school when I was a kid.", "I was walk to school when I was a kid.", "I had walk to school when I was a kid."], a: "I walked to school when I was a kid.", note: "過去時間用過去式。" },
+    { q: "I ate two eggs in the morning today.", opts: ["I eat two eggs in the morning today.", "I ate two eggs in the morning today.", "I am eat two eggs in the morning today.", "I eaten two eggs in the morning today."], a: "I ate two eggs in the morning today.", note: "今天已發生的動作。" },
+    { q: "I did not like music when I was young.", opts: ["I do not like music when I was young.", "I did not like music when I was young.", "I am not like music when I was young.", "I not liked music when I was young."], a: "I did not like music when I was young.", note: "過去否定用 did not。" },
+    { q: "I did not go home yesterday.", opts: ["I do not go home yesterday.", "I did not go home yesterday.", "I am not go home yesterday.", "I was not go home yesterday."], a: "I did not go home yesterday.", note: "昨天沒回家。" },
+    { q: "He was already very good at playing piano when he was six.", opts: ["He is already very good in playing piano when he was six.", "He was already very good at playing piano when he was six.", "He is already very good at playing piano when he was six.", "He was already very good in playing piano when he was six."], a: "He was already very good at playing piano when he was six.", note: "be good at。" },
+    { q: "They were my students five years ago.", opts: ["They were my students five years ago.", "They are my students five years ago.", "They been my students five years ago.", "They was my students five years ago."], a: "They were my students five years ago.", note: "複數過去用 were。" },
+    { q: "Did you go to the church last Sunday?", opts: ["Did you go to the church last Sunday?", "Do you go the church last Sunday?", "Are you go to the church last Sunday?", "Were you go to the church last Sunday?"], a: "Did you go to the church last Sunday?", note: "過去問句用 Did。" },
+    { q: "I was very sad when I heard the bad news yesterday.", opts: ["I am very sad when I heard the bad news yesterday.", "I was very sad when I heard the bad news yesterday.", "I very sad when I heard the bad news yesterday.", "I am been very sad when I heard the news yesterday."], a: "I was very sad when I heard the bad news yesterday.", note: "過去狀態用 was。" },
+    { q: "He did not know how to swim when he was a kid.", opts: ["He does not know how to swim when he was a kid.", "He did not know how to swim when he was a kid.", "He not know how to swim when he was a kid.", "He is not know how to swim when he was a kid."], a: "He did not know how to swim when he was a kid.", note: "過去的能力。" },
+    { q: "The earth goes around the sun.", opts: ["The earth goes around the sun.", "The earth went around the sun.", "The earth is go around the sun.", "The earth going around the sun."], a: "The earth goes around the sun.", note: "不變真理。" },
+    { q: "When you came to my house, I was calling my father.", opts: ["When you came to my house, I am calling my father.", "When you came to my house, I was calling my father.", "When you come to my house, I was calling my father.", "When you came to my house, I called my father."], a: "When you came to my house, I was calling my father.", note: "過去進行式。" },
+    { q: "I could not answer you because I was taking a shower.", opts: ["I could not answer you because I am taking a shower.", "I could not answer you because I was taking a shower.", "I cannot answer you because I was taking a shower.", "I could not answer you because I taken a shower."], a: "I could not answer you because I was taking a shower.", note: "當時正在洗澡。" },
+    { q: "When the train reached the station, people were dancing there.", opts: ["When the train reached the station, people are dancing there.", "When the train reached the station, people were dancing there.", "When the train reach the station, people were dancing there.", "When the train reached the station, people danced there."], a: "When the train reached the station, people were dancing there.", note: "背景進行動作。" },
+    { q: "When you called me last night, I was watching TV.", opts: ["When you called me last night, I watched TV.", "When you called me last night, I was watching TV.", "When you call me last night, I am watching TV.", "When you called me last night, I watching TV."], a: "When you called me last night, I was watching TV.", note: "強調當下動作。" },
+    { q: "My mother was always cooking when I went home.", opts: ["My mother always cooked when I went home.", "My mother was always cooking when I went home.", "My mother always cook when I went home.", "My mother is always cooking when I went home."], a: "My mother was always cooking when I went home.", note: "過去的背景。" },
+    { q: "It rained when I was walking back home.", opts: ["It rained when I walkes back home.", "It rained when I was walking back home.", "It is raining when I walked back home.", "It rain when I was walking back home."], a: "It rained when I was walking back home.", note: "走路時下雨了。" },
+    { q: "We were watching a movie when our mother called us.", opts: ["We are watching a movie when our mother called us.", "We were watching a movie when our mother called us.", "We watched a movie when our mother called us.", "We were watch a movie when our mother called us."], a: "We were watching a movie when our mother called us.", note: "正在看電影。" },
+    { q: "He was watching TV around eight o’clock yesterday.", opts: ["He watched TV around eight o’clock yesterday.", "He was watching TV around eight o’clock yesterday.", "He is watching TV around eight o’clock yesterday.", "He watching TV around eight o’clock yesterday."], a: "He was watching TV around eight o’clock yesterday.", note: "特定過去時刻。" },
+    { q: "I was studying mathematics when you came to my home.", opts: ["I was studying mathematics when you came to my home.", "I am studying mathematics when you came to my home.", "I studied mathematics when you came to my home.", "I was study mathematics when you came to my home."], a: "I was studying mathematics when you came to my home.", note: "過去進行中。" },
+    { q: "She was preparing for dinner when her husband went home.", opts: ["She was preparing for dinner when her husband went home.", "She is preparing for dinner when her husband went home.", "She prepared for dinner when her husband went home.", "She was prepare for dinner when her husband went home."], a: "She was preparing for dinner when her husband went home.", note: "準備晚餐。" },
+    { q: "Since 1939, I have lived here.", opts: ["Since 1939, I have live here.", "Since 1939, I have lived here.", "Since 1939, I am living here.", "Since 1939, I lived here."], a: "Since 1939, I have lived here.", note: "完成式搭配 since。" },
+    { q: "Since he was a child, he has lived here.", opts: ["Since he was a child, he has lived here.", "Since he was a child, he have lived here.", "Since he was a child, he is living here.", "Since he was a child, he lives here."], a: "Since he was a child, he has lived here.", note: "三單 has + p.p.。" },
+    { q: "Since I was little, I have lived here.", opts: ["Since I was little, I have lived here.", "Since I was little, I am living here.", "Since I was little, I was living here.", "Since I was little, I lived here."], a: "Since I was little, I have lived here.", note: "持續狀態。" },
+    { q: "Since last year, I have not seen him.", opts: ["Since last year, I did not see him.", "Since last year, I have not seen him.", "Since last year, I am not seeing him.", "Since last year, I don't see him."], a: "Since last year, I have not seen him.", note: "否定完成式。" },
+    { q: "Since 1950, he has worked.", opts: ["Since 1950, he workd.", "Since 1950, he has worked.", "Since 1950, he is working.", "Since 1950, he was working."], a: "Since 1950, he has worked.", note: "動作持續。" },
+    { q: "He has played tennis since he was in high school.", opts: ["He has played tennis since he was in high school.", "He played tennis since he was in high school.", "He has play tennis since he was in high school.", "He is playing tennis since he was in high school."], a: "He has played tennis since he was in high school.", note: "自高中起持續。" },
+    { q: "He has practiced speaking English since he got into college.", opts: ["He has practiced speaking English since he got into college.", "He practiced speaking English since he got into college.", "He is practicing speaking English since he got into college.", "He has practice speaking English since he got into college."], a: "He has practiced speaking English since he got into college.", note: "since + 過去式子句。" },
+    { q: "He has taught in this school since 1950.", opts: ["He teaches in this school since 1950.", "He has taught in this school since 1950.", "He is teaching in this school since 1950.", "He taught in this school since 1950."], a: "He has taught in this school since 1950.", note: "教學經歷持續。" },
+    { q: "It has been raining since two days ago.", opts: ["It has been raining since two days ago.", "It rained since two days ago.", "It is raining since two days ago.", "It was raining since two days ago."], a: "It has been raining since two days ago.", note: "現在完成進行式。" },
+    { q: "He has studied English since he went to college.", opts: ["He has studied English since he went to college.", "He has studied English before he went to college.", "He studied English since he went to college.", "He is studying English since he went to college."], a: "He has studied English since he went to college.", note: "自大學起學習。" },
+    { q: "I do not love music.", opts: ["I do not love music.", "I not love music.", "I am not love music.", "I don't loves music."], a: "I do not love music.", note: "一般動詞否定。" },
+    { q: "He does not walk to school.", opts: ["He is not walk to school.", "He does not walk to school.", "He not walks to school.", "He doesn't walks to school."], a: "He does not walk to school.", note: "三單否定 does not。" },
+    { q: "My brother does not go to school by bus.", opts: ["My brother do not go to school by bus.", "My brother does not go to school by bus.", "My brother not goes to school by bus.", "My brother is not go to school by bus."], a: "My brother does not go to school by bus.", note: "單數主詞。" },
+    { q: "His brother is not my teacher.", opts: ["His brother is not my teacher.", "His brother not my teacher.", "His brother does not my teacher.", "His brother no is my teacher."], a: "His brother is not my teacher.", note: "B 動詞否定。" },
+    { q: "He was not happy yesterday.", opts: ["He was not happy yesterday.", "He not happy yesterday.", "He did not happy yesterday.", "He were not happy yesterday."], a: "He was not happy yesterday.", note: "過去狀態否定。" },
+    { q: "He did not eat breakfast yesterday morning.", opts: ["He does not eat breakfast yesterday morning.", "He did not eat breakfast yesterday morning.", "He not ate breakfast yesterday morning.", "He was not eat breakfast yesterday morning."], a: "He did not eat breakfast yesterday morning.", note: "昨晨動作否定。" },
+    { q: "He is not my teacher.", opts: ["He is not my teacher.", "He does not my teacher.", "He not my teacher.", "He no be my teacher."], a: "He is not my teacher.", note: "B 動詞否定。" },
+    { q: "My father does not swim every day.", opts: ["My father is not swim every day.", "My father does not swim every day.", "My father not swims every day.", "My father no swim every day."], a: "My father does not swim every day.", note: "一般動詞否定。" },
+    { q: "He did not go to school yesterday because he was sick.", opts: ["He did not go to school yesterday because he was sick.", "He was not go too school yesterday because he was sick.", "He does not go to school yesterday because he was sick.", "He not goes to school yesterday because he was sick."], a: "He did not go to school yesterday because he was sick.", note: "時態一致。" },
+    { q: "He did not see that movie last night.", opts: ["He did not see that movie last night.", "He does not see that movie last night.", "He was not see that movie last night.", "He not saw that movie last night."], a: "He did not see that movie last night.", note: "昨晚沒看。" },
+    { q: "Do you love music?", opts: ["Are you love music?", "Do you love music?", "Is you love music?", "Does you love music?"], a: "Do you love music?", note: "動詞問句用 Do。" },
+    { q: "Are you a student?", opts: ["Are you a student?", "Do you a student?", "Is you a student?", "You are a student?"], a: "Are you a student?", note: "B 動詞問句。" },
+    { q: "Does he work as a fisherman?", opts: ["Is he work as a fisherman?", "Does he work as a fisherman?", "Do he work as a fisherman?", "Is he working as a fisherman?"], a: "Does he work as a fisherman?", note: "職業習慣問句。" },
+    { q: "Did he go to the church yesterday?", opts: ["Does he go to the church yesterday?", "Did he go to the church yesterday?", "Is he go to the church yesterday?", "Was he go to the church yesterday?"], a: "Did he go to the church yesterday?", note: "昨日問句用 Did。" }
 ];
 
-let userData = JSON.parse(localStorage.getItem('kana_v2')) || { mastered: 0, currentLevel: 0 };
+let userData = JSON.parse(localStorage.getItem('kana_v3')) || { mastered: 0, currentLevel: 0, failed_list: [], stickers: [] };
 let currentGroup = [];
 let totalInGroup = 20;
 let isLocked = false;
+let isRetryMode = false;
 
 function init() {
     document.getElementById('mastered-count').innerText = userData.mastered;
-    document.getElementById('current-level-display').innerText = userData.currentLevel + 1;
-    document.getElementById('piske-img').src = IMGS.piske;
+    document.getElementById('lv-display').innerText = userData.currentLevel + 1;
+    document.getElementById('failed-count').innerText = userData.failed_list.length;
+    document.getElementById('sticker-count').innerText = userData.stickers.length;
+    if (userData.failed_list.length > 0) document.getElementById('retry-btn').classList.remove('hidden');
 }
 
-function startCurrentLevel() {
+function startLevel() {
+    isRetryMode = false;
     const startIdx = userData.currentLevel * 20;
     const group = allQuestions.slice(startIdx, startIdx + 20);
-    if (group.length === 0) return alert("全部完成囉！");
+    if (group.length === 0) return alert("題庫已清空捏！");
     currentGroup = shuffle([...group]);
     totalInGroup = currentGroup.length;
+    showGame();
+}
+
+function startRetry() {
+    isRetryMode = true;
+    currentGroup = shuffle([...userData.failed_list]);
+    totalInGroup = currentGroup.length;
+    showGame();
+}
+
+function showGame() {
     document.getElementById('dashboard').classList.add('hidden');
     document.getElementById('game-zone').classList.remove('hidden');
     document.getElementById('home-icon').classList.remove('hidden');
+    document.getElementById('total-num').innerText = totalInGroup;
     renderQuestion();
 }
 
 function renderQuestion() {
     isLocked = false;
-    if (currentGroup.length === 0) return showFinish();
-
+    if (currentGroup.length === 0) return handleFinish();
     const data = currentGroup[0];
     document.getElementById('q-text').innerText = data.q;
     document.getElementById('hint-text').innerText = data.note;
     document.getElementById('hint-area').classList.add('hidden');
-    
     const area = document.getElementById('choices-area');
     area.innerHTML = "";
     data.opts.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = "btn-choice";
-        btn.innerText = opt;
-        btn.onclick = () => handleSelect(opt, btn);
-        area.appendChild(btn);
+        const b = document.createElement('button');
+        b.className = "btn-choice"; b.innerText = opt;
+        b.onclick = () => handleSelect(opt, b);
+        area.appendChild(b);
     });
-
-    // 更新進度與 P助位置
     const solved = totalInGroup - currentGroup.length;
-    const percent = (solved / totalInGroup) * 100;
-    document.getElementById('progress-bar').style.width = percent + "%";
-    document.getElementById('piske-img').style.left = percent + "%";
+    const p = (solved/totalInGroup)*100;
+    document.getElementById('progress-bar').style.width = p + "%";
+    document.getElementById('piske-img').style.left = p + "%";
+    document.getElementById('progress-num').innerText = solved;
 }
 
-function handleSelect(selected, btn) {
-    if (isLocked) return;
-    isLocked = true;
-    const currentItem = currentGroup[0];
-    const fb = document.getElementById('usagi-act');
-    document.getElementById('hint-area').classList.remove('hidden');
-
-    if (selected === currentItem.a) {
-        btn.classList.add('choice-correct');
-        userData.mastered++;
-        fb.src = IMGS.usagi_happy;
-        fb.classList.add('show-usagi');
-        
-        setTimeout(() => {
-            fb.classList.remove('show-usagi');
-            currentGroup.shift();
-            saveData();
-            renderQuestion();
-        }, 1200);
+function handleSelect(opt, b) {
+    if (isLocked) return; isLocked = true;
+    const cur = currentGroup[0];
+    if (opt === cur.a) {
+        b.classList.add('choice-correct-mint');
+        if (!isRetryMode) userData.mastered++;
+        else userData.failed_list = userData.failed_list.filter(i => i.q !== cur.q);
+        setTimeout(() => { currentGroup.shift(); saveData(); renderQuestion(); }, 800);
     } else {
-        document.querySelectorAll('.btn-choice').forEach(b => {
-            if (b.innerText === currentItem.a) b.classList.add('text-reveal-correct');
-        });
-        fb.src = IMGS.usagi_sad;
-        fb.classList.add('show-usagi');
-
-        setTimeout(() => {
-            fb.classList.remove('show-usagi');
-            const failItem = currentGroup.shift();
-            currentGroup.push(failItem);
-            renderQuestion();
-        }, 1600);
+        document.querySelectorAll('.btn-choice').forEach(btn => { if(btn.innerText === cur.a) btn.classList.add('choice-reveal-pink'); });
+        if (!isRetryMode && !userData.failed_list.some(i => i.q === cur.q)) userData.failed_list.push(cur);
+        document.getElementById('hint-area').classList.remove('hidden');
+        setTimeout(() => { currentGroup.push(currentGroup.shift()); renderQuestion(); }, 2000);
     }
 }
 
-function showFinish() {
+function handleFinish() {
     document.getElementById('game-zone').classList.add('hidden');
     document.getElementById('finish-zone').classList.remove('hidden');
-    createHearts(); // 灑愛心
-}
-
-function createHearts() {
-    for (let i = 0; i < 30; i++) {
-        setTimeout(() => {
-            const heart = document.createElement('div');
-            heart.className = 'heart';
-            heart.innerText = '🌸'; // 妳也可以換成 '💗'
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 5000);
-        }, i * 100);
+    if (!isRetryMode) {
+        const stickerIdx = userData.currentLevel;
+        if (stickerIdx < STICKERS.length && !userData.stickers.includes(stickerIdx)) {
+            userData.stickers.push(stickerIdx);
+            document.getElementById('new-sticker-alert').classList.remove('hidden');
+            document.getElementById('unlocked-img').src = STICKERS[stickerIdx];
+        }
+        userData.currentLevel++;
     }
+    saveData();
 }
 
-function nextLevel() {
-    userData.currentLevel++;
-    saveData();
-    location.reload();
+function showBook() {
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('book-zone').classList.remove('hidden');
+    const grid = document.getElementById('sticker-grid');
+    grid.innerHTML = "";
+    STICKERS.forEach((url, i) => {
+        const div = document.createElement('div');
+        div.className = "sticker-item" + (userData.stickers.includes(i) ? " unlocked" : "");
+        div.innerHTML = `<img src="${url}">`;
+        grid.appendChild(div);
+    });
 }
 
 function goHome() { location.reload(); }
+function saveData() { localStorage.setItem('kana_v3', JSON.stringify(userData)); }
 function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
-function saveData() { localStorage.setItem('kana_v2', JSON.stringify(userData)); }
-
+function resetGame() { if(confirm("確定重置？")) { localStorage.clear(); location.reload(); } }
 init();
 </script>
 </body>
