@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>文法討伐團~捏！</title>
     <style>
         :root {
@@ -14,65 +14,70 @@
 
         * { box-sizing: border-box; font-family: 'Arial', sans-serif; font-weight: 900; -webkit-tap-highlight-color: transparent; }
 
-        body { margin: 0; padding: 10px; background-color: var(--kanahei-pink); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        /* 修正：允許捲動，避免手機畫面下半部消失 */
+        body { 
+            margin: 0; padding: 15px; background-color: var(--kanahei-pink); 
+            display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; overflow-y: auto; 
+        }
 
         .card {
             width: 100%; max-width: 480px; background: white;
             border: 5px solid var(--kanahei-brown);
-            border-radius: 40px; padding: 25px;
-            box-shadow: 0px 10px 0px var(--kanahei-rose);
+            border-radius: 40px; padding: 20px;
+            box-shadow: 0px 8px 0px var(--kanahei-rose);
             position: relative; text-align: center;
-            z-index: 10;
+            margin-bottom: 20px; /* 留點空間給底部 */
         }
 
-        .header-gifs { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; padding: 0 5px; }
+        /* 首頁三圖 */
+        .header-gifs { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; }
         .header-gifs img { width: 30%; height: auto; }
-        .header-gifs img:nth-child(2) { width: 38%; transform: translateY(-5px); }
+        .header-gifs img:nth-child(2) { width: 36%; transform: translateY(-5px); }
 
+        /* 答題回饋 GIF */
         #feedback-overlay {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 999; display: none; pointer-events: none;
         }
-        #feedback-overlay img { width: 220px; filter: drop-shadow(0 0 15px white); }
+        #feedback-overlay img { width: 200px; filter: drop-shadow(0 0 10px white); }
 
-        /* 進度條與文字 */
-        .progress-info { display: flex; justify-content: space-between; font-size: 16px; color: var(--kanahei-brown); margin-bottom: 5px; padding: 0 5px; }
-        .progress-container { margin: 10px 0 25px 0; position: relative; height: 60px; }
-        .piske-runner { position: absolute; bottom: 15px; width: 65px; transition: left 0.3s; margin-left: -32px; z-index: 5; }
-        .bar-outer { height: 16px; background: var(--kanahei-cream); border: 3px solid var(--kanahei-brown); border-radius: 10px; overflow: hidden; }
+        /* 全螢幕通關大圖 (LINE 貼圖風格) */
+        #win-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255, 255, 255, 0.8);
+            display: none; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 1000; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #win-overlay img { width: 85%; max-width: 350px; height: auto; }
+        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+
+        /* 進度條 */
+        .progress-info { display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 5px; color: var(--kanahei-brown); }
+        .progress-container { margin-bottom: 20px; position: relative; height: 50px; }
+        .piske-runner { position: absolute; bottom: 10px; width: 55px; transition: left 0.3s; margin-left: -27px; }
+        .bar-outer { height: 14px; background: var(--kanahei-cream); border: 3px solid var(--kanahei-brown); border-radius: 10px; overflow: hidden; }
         .bar-inner { height: 100%; width: 0%; background: var(--kanahei-rose); transition: width 0.3s; }
 
-        .q-box { font-size: 24px; color: var(--kanahei-brown); margin: 20px 0; text-align: left; line-height: 1.5; min-height: 60px; }
+        .q-box { font-size: 22px; color: var(--kanahei-brown); margin: 15px 0; text-align: left; line-height: 1.4; }
         
         .btn-choice { 
-            background: white; margin-bottom: 15px; font-size: 22px; 
-            border: 3px solid var(--kanahei-brown); border-radius: 20px; 
-            width: 100%; padding: 20px; text-align: left; cursor: pointer; color: var(--kanahei-brown);
-            box-shadow: 0 5px 0 #ddd; transition: 0.1s;
+            background: white; margin-bottom: 12px; font-size: 20px; 
+            border: 3px solid var(--kanahei-brown); border-radius: 18px; 
+            width: 100%; padding: 15px; text-align: left; cursor: pointer; color: var(--kanahei-brown);
+            box-shadow: 0 4px 0 #ddd;
         }
-        .btn-choice:active { transform: translateY(3px); box-shadow: none; }
 
         .main-btn { 
-            width: 90%; padding: 18px; font-size: 24px; border-radius: 35px; 
+            width: 90%; padding: 15px; font-size: 22px; border-radius: 30px; 
             background: var(--kanahei-rose); color: white; border: 4px solid var(--kanahei-brown); 
-            cursor: pointer; box-shadow: 0 6px 0 var(--kanahei-brown); margin: 12px 0;
+            cursor: pointer; box-shadow: 0 5px 0 var(--kanahei-brown); margin: 8px 0;
         }
 
         .translation-box { 
-            background: #fff9c4; padding: 18px; border-radius: 20px; 
-            margin-top: 15px; font-size: 19px; border: 3px dashed var(--kanahei-rose); 
+            background: #fff9c4; padding: 15px; border-radius: 20px; 
+            margin-top: 15px; font-size: 18px; border: 3px dashed var(--kanahei-rose); 
             color: #d81b60; text-align: left;
-        }
-
-        /* 愛心雨圖片樣式 */
-        .heart {
-            position: fixed; top: -15%; 
-            user-select: none; z-index: 100;
-            animation: fall linear forwards;
-            pointer-events: none;
-        }
-        @keyframes fall {
-            to { transform: translateY(115vh) rotate(360deg); }
         }
 
         .hidden { display: none; }
@@ -82,6 +87,12 @@
 
 <div id="feedback-overlay"><img id="feedback-img" src=""></div>
 
+<div id="win-overlay" onclick="location.reload()">
+    <img src="https://lunakuo1719.github.io/kana-wunfa/nahappy.gif">
+    <h1 style="color: var(--kanahei-rose); text-shadow: 2px 2px white;">攻略成功！捏！</h1>
+    <p>點擊畫面回到首頁</p>
+</div>
+
 <div class="card">
     <div id="dashboard">
         <div class="header-gifs">
@@ -89,11 +100,11 @@
             <img src="https://lunakuo1719.github.io/kana-wunfa/xmas.gif">
             <img src="https://lunakuo1719.github.io/kana-wunfa/heade_r.gif">
         </div>
-        <h1 style="color: var(--kanahei-rose); margin:5px 0; font-size: 28px;">文法討伐團~捏！</h1>
+        <h1 style="color: var(--kanahei-rose); margin:5px 0; font-size: 26px;">文法討伐團~捏！</h1>
         
-        <div style="background: var(--kanahei-cream); padding: 18px; border-radius: 25px; border: 3px solid var(--kanahei-brown); margin: 20px 0;">
-            <p style="font-size:20px; margin:8px 0;">已熟練：<span id="mastered-count" style="color:var(--kanahei-rose)">0</span></p>
-            <p style="font-size:20px; margin:8px 0;">錯題數：<span id="failed-count">0</span> | 貼紙：<span id="sticker-count">0</span>/17</p>
+        <div style="background: var(--kanahei-cream); padding: 15px; border-radius: 25px; border: 3px solid var(--kanahei-brown); margin: 15px 0;">
+            <p style="font-size:18px; margin:5px 0;">已熟練：<span id="mastered-count" style="color:var(--kanahei-rose)">0</span></p>
+            <p style="font-size:18px; margin:5px 0;">錯題數：<span id="failed-count">0</span> | 貼紙：<span id="sticker-count">0</span>/17</p>
         </div>
 
         <button class="main-btn" onclick="startLevel()">開始討伐！</button>
@@ -103,8 +114,8 @@
 
     <div id="game-zone" class="hidden">
         <div class="progress-info">
-            <span>正在攻略中...捏！</span>
-            <span>進度：<span id="progress-num">0</span> / <span id="total-num">20</span></span>
+            <span>討伐進行中...</span>
+            <span><span id="progress-num">0</span> / <span id="total-num">20</span></span>
         </div>
         <div class="progress-container">
             <img id="piske-img" src="https://lunakuo1719.github.io/kana-wunfa/glasskar.gif" class="piske-runner">
@@ -123,7 +134,6 @@
 <script>
 const IMG_YES = "https://lunakuo1719.github.io/kana-wunfa/heartna.gif";
 const IMG_WRONG = "https://lunakuo1719.github.io/kana-wunfa/Wrong.gif";
-const RAIN_IMAGE = "https://lunakuo1719.github.io/kana-wunfa/nahappy.gif";
 
 const allQuestions = [
     { q: "This is _______ elephant.", opts: ["a", "an", "X", "the"], a: "an", note: "中文翻譯：這是一隻大象。" },
@@ -238,7 +248,7 @@ const allQuestions = [
     { q: "Choose the correct sentence:", opts: ["My mother always cooked when I went home.", "My mother was always cooking when I went home.", "My mother always cook when I went home.", "My mother is always cooking when I went home."], a: "My mother was always cooking when I went home.", note: "1-35：過去習慣性正在發生的動作 [cite: 5, 143]。" },
 ];
 
-let userData = JSON.parse(localStorage.getItem('kana_v6')) || { mastered: 0, currentLevel: 0, failed_list: [], stickers: [] };
+let userData = JSON.parse(localStorage.getItem('kana_v7')) || { mastered: 0, currentLevel: 0, failed_list: [], stickers: [] };
 let currentGroup = [];
 let totalInGroup = 20;
 let isLocked = false;
@@ -248,7 +258,13 @@ function init() {
     document.getElementById('mastered-count').innerText = userData.mastered;
     document.getElementById('failed-count').innerText = userData.failed_list.length;
     document.getElementById('sticker-count').innerText = userData.stickers.length;
-    document.getElementById('retry-btn').style.display = userData.failed_list.length > 0 ? "inline-block" : "none";
+    // 強制檢查補考按鈕
+    const btn = document.getElementById('retry-btn');
+    if (userData.failed_list && userData.failed_list.length > 0) {
+        btn.style.display = "inline-block";
+    } else {
+        btn.style.display = "none";
+    }
 }
 
 function startLevel() {
@@ -302,81 +318,54 @@ function handleSelect(opt, b) {
     if (isLocked) return;
     isLocked = true;
     const cur = currentGroup[0];
-    const overlay = document.getElementById('feedback-overlay');
-    const fImg = document.getElementById('feedback-img');
-
+    
     document.getElementById('hint-area').classList.remove('hidden');
 
     if (opt === cur.a) {
-        fImg.src = IMG_YES + "?t=" + Date.now();
-        overlay.style.display = "block";
+        document.getElementById('feedback-img').src = IMG_YES + "?t=" + Date.now();
+        document.getElementById('feedback-overlay').style.display = "block";
         b.style.background = "#b2cecf";
         
         if (isRetryMode) {
-            userData.failed_list = userData.failed_list.filter(q => q.q !== cur.q);
+            userData.failed_list = userData.failed_list.filter(item => item.q !== cur.q);
         } else {
             userData.mastered++;
         }
 
         setTimeout(() => {
-            overlay.style.display = "none";
+            document.getElementById('feedback-overlay').style.display = "none";
             currentGroup.shift();
             saveData();
             renderQuestion();
-        }, 1800);
+        }, 1500);
     } else {
-        fImg.src = IMG_WRONG + "?t=" + Date.now();
-        overlay.style.display = "block";
-        b.style.background = "#f06292";
-        b.style.color = "white";
+        document.getElementById('feedback-img').src = IMG_WRONG + "?t=" + Date.now();
+        document.getElementById('feedback-overlay').style.display = "block";
+        b.style.background = "#f06292"; b.style.color = "white";
 
-        if (!isRetryMode && !userData.failed_list.some(q => q.q === cur.q)) {
+        if (!isRetryMode && !userData.failed_list.some(item => item.q === cur.q)) {
             userData.failed_list.push(cur);
         }
 
         setTimeout(() => {
-            overlay.style.display = "none";
+            document.getElementById('feedback-overlay').style.display = "none";
             currentGroup.push(currentGroup.shift());
             renderQuestion();
-        }, 2200);
+        }, 1500);
     }
 }
 
 function finishLevel() {
-    startHeartRain(); // 呼叫下方的愛心雨
-    setTimeout(() => {
-        if (!isRetryMode) userData.currentLevel++;
-        saveData();
-        alert(isRetryMode ? "補考過關捏！" : "攻略成功！送妳滿滿驚喜！");
-        location.reload();
-    }, 3500);
+    // 顯示全螢幕通關大圖
+    document.getElementById('win-overlay').style.display = "flex";
+    if (!isRetryMode) userData.currentLevel++;
+    saveData();
 }
 
-// 🌸 粉紅愛心雨 (nahappy.gif 版)
-function startHeartRain() {
-    for (let i = 0; i < 40; i++) {
-        setTimeout(() => {
-            const heart = document.createElement('img');
-            heart.className = 'heart';
-            heart.src = RAIN_IMAGE;
-            
-            // 隨機左邊位置
-            heart.style.left = Math.random() * 100 + 'vw';
-            // 隨機大小 (40px ~ 90px)
-            const size = Math.random() * 50 + 40;
-            heart.style.width = size + 'px';
-            // 隨機掉落速度 (2s ~ 4s)
-            heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
-            // 隨機透明度
-            heart.style.opacity = Math.random() * 0.4 + 0.6; 
-            
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 4000);
-        }, i * 150);
-    }
+function saveData() { 
+    localStorage.setItem('kana_v7', JSON.stringify(userData)); 
 }
 
-function saveData() { localStorage.setItem('kana_v6', JSON.stringify(userData)); }
 init();
 </script>
 </body>
