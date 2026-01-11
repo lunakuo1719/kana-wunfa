@@ -14,7 +14,7 @@
 
         * { box-sizing: border-box; font-family: 'Arial', sans-serif; font-weight: 900; -webkit-tap-highlight-color: transparent; }
 
-        body { margin: 0; padding: 10px; background-color: var(--kanahei-pink); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        body { margin: 0; padding: 10px; background-color: var(--kanahei-pink); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
 
         .card {
             width: 100%; max-width: 480px; background: white;
@@ -22,29 +22,23 @@
             border-radius: 40px; padding: 25px;
             box-shadow: 0px 10px 0px var(--kanahei-rose);
             position: relative; text-align: center;
+            z-index: 10;
         }
 
-        /* 三圖並排容器 */
-        .header-gifs { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-end; /* 讓圖片底部對齊 */
-            margin-bottom: 15px;
-            padding: 0 5px;
-        }
+        .header-gifs { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; padding: 0 5px; }
         .header-gifs img { width: 30%; height: auto; }
-        /* 讓中間那張 GIF 稍微大一點 */
         .header-gifs img:nth-child(2) { width: 38%; transform: translateY(-5px); }
 
-        /* 答題回饋彈出層 */
         #feedback-overlay {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 999; display: none; pointer-events: none;
         }
         #feedback-overlay img { width: 220px; filter: drop-shadow(0 0 15px white); }
 
-        .progress-container { margin: 25px 0; position: relative; height: 60px; }
-        .piske-runner { position: absolute; bottom: 15px; width: 65px; transition: left 0.3s; margin-left: -32px; }
+        /* 進度條與文字 */
+        .progress-info { display: flex; justify-content: space-between; font-size: 16px; color: var(--kanahei-brown); margin-bottom: 5px; padding: 0 5px; }
+        .progress-container { margin: 10px 0 25px 0; position: relative; height: 60px; }
+        .piske-runner { position: absolute; bottom: 15px; width: 65px; transition: left 0.3s; margin-left: -32px; z-index: 5; }
         .bar-outer { height: 16px; background: var(--kanahei-cream); border: 3px solid var(--kanahei-brown); border-radius: 10px; overflow: hidden; }
         .bar-inner { height: 100%; width: 0%; background: var(--kanahei-rose); transition: width 0.3s; }
 
@@ -67,10 +61,20 @@
         .translation-box { 
             background: #fff9c4; padding: 18px; border-radius: 20px; 
             margin-top: 15px; font-size: 19px; border: 3px dashed var(--kanahei-rose); 
-            color: #d81b60; text-align: left; animation: fadeIn 0.5s;
+            color: #d81b60; text-align: left;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* 愛心雨圖片樣式 */
+        .heart {
+            position: fixed; top: -15%; 
+            user-select: none; z-index: 100;
+            animation: fall linear forwards;
+            pointer-events: none;
+        }
+        @keyframes fall {
+            to { transform: translateY(115vh) rotate(360deg); }
+        }
+
         .hidden { display: none; }
     </style>
 </head>
@@ -89,15 +93,19 @@
         
         <div style="background: var(--kanahei-cream); padding: 18px; border-radius: 25px; border: 3px solid var(--kanahei-brown); margin: 20px 0;">
             <p style="font-size:20px; margin:8px 0;">已熟練：<span id="mastered-count" style="color:var(--kanahei-rose)">0</span></p>
-            <p style="font-size:20px; margin:8px 0;">進度：Lv.<span id="lv-display">1</span> | 貼紙：<span id="sticker-count">0</span>/17</p>
+            <p style="font-size:20px; margin:8px 0;">錯題數：<span id="failed-count">0</span> | 貼紙：<span id="sticker-count">0</span>/17</p>
         </div>
 
         <button class="main-btn" onclick="startLevel()">開始討伐！</button>
-        <button id="retry-btn" class="main-btn hidden" style="background:#b2cecf;" onclick="startRetry()">錯題補考</button>
-        <button class="main-btn" style="background:#ffd54f;" onclick="showBook()">我的收集冊</button>
+        <button id="retry-btn" class="main-btn" style="background:#b2cecf; display:none;" onclick="startRetry()">錯題補考</button>
+        <button class="main-btn" style="background:#ffd54f;" onclick="alert('收集冊即將開放！')">我的收集冊</button>
     </div>
 
     <div id="game-zone" class="hidden">
+        <div class="progress-info">
+            <span>正在攻略中...捏！</span>
+            <span>進度：<span id="progress-num">0</span> / <span id="total-num">20</span></span>
+        </div>
         <div class="progress-container">
             <img id="piske-img" src="https://lunakuo1719.github.io/kana-wunfa/glasskar.gif" class="piske-runner">
             <div class="bar-outer"><div class="bar-inner" id="progress-bar"></div></div>
@@ -113,35 +121,94 @@
 </div>
 
 <script>
-// 圖檔設定
 const IMG_YES = "https://lunakuo1719.github.io/kana-wunfa/heartna.gif";
 const IMG_WRONG = "https://lunakuo1719.github.io/kana-wunfa/Wrong.gif";
+const RAIN_IMAGE = "https://lunakuo1719.github.io/kana-wunfa/nahappy.gif";
 
-// 這裡放入妳整理的 100 題
 const allQuestions = [
-    { q: "This is _______ elephant.", opts: ["a", "an", "the", "X"], a: "an", note: "這是一隻大象。elephant 是母音開頭，所以冠詞要用 an 唷！" },
-    { q: "I _______ a student.", opts: ["am", "is", "are", "be"], a: "am", note: "我是一個學生。主詞是 I 的時候，B動詞要用 am。" },
-    // ... 之後請把剩下的題目補在這邊
+    { q: "He is devoted _______ his work.", opts: ["to", "at", "in", "on"], a: "to", note: "中文翻譯：他致力於他的工作。" },
+    { q: "What do you say _______ going for a walk?", opts: ["to", "for", "with", "about"], a: "to", note: "中文翻譯：去散步你覺得如何？" },
+    { q: "I am _______ of being alone.", opts: ["afraid", "scared", "fear", "frighten"], a: "afraid", note: "中文翻譯：我怕孤單。" },
+    { q: "He is _______ of his success.", opts: ["proud", "pride", "prouder", "proudly"], a: "proud", note: "中文翻譯：他為自己的成功感到驕傲。" },
+    { q: "This book belongs _______ me.", opts: ["with", "to", "for", "at"], a: "to", note: "中文翻譯：這本書屬於我。" },
+    { q: "Compare this _______ that.", opts: ["with", "to", "at", "by"], a: "with", note: "中文翻譯：拿這個跟那個比較。" },
+    { q: "He died _______ cancer.", opts: ["of", "from", "by", "with"], a: "of", note: "中文翻譯：他死於癌症 (die of 病名)。" },
+    { q: "I agree _______ you.", opts: ["to", "with", "at", "on"], a: "with", note: "中文翻譯：我同意你。" },
+    { q: "The chair is made _______ wood.", opts: ["of", "from", "by", "with"], a: "of", note: "中文翻譯：這椅子是木頭做的 (物理變化用 of)。" },
+    { q: "Wine is made _______ grapes.", opts: ["of", "from", "by", "with"], a: "from", note: "中文翻譯：酒是葡萄釀的 (化學變化用 from)。" },
+    { q: "He is independent _______ his parents.", opts: ["of", "from", "with", "at"], a: "of", note: "中文翻譯：他獨立於父母之外（不依賴）。" },
+    { q: "I am familiar _______ this place.", opts: ["with", "to", "at", "in"], a: "with", note: "中文翻譯：我對這地方很熟悉。" },
+    { q: "The place is familiar _______ me.", opts: ["with", "to", "at", "in"], a: "to", note: "中文翻譯：這地方對我來說很熟悉。" },
+    { q: "He is absent _______ school.", opts: ["from", "at", "in", "to"], a: "from", note: "中文翻譯：他上學缺席。" },
+    { q: "Don't be late _______ class.", opts: ["for", "at", "in", "to"], a: "for", note: "中文翻譯：上課別遲到。" },
+    { q: "This is the place _______ I was born.", opts: ["which", "where", "that", "at"], a: "where", note: "中文翻譯：這是我出生的地方。" },
+    { q: "This is the house _______ I bought.", opts: ["which", "where", "that", "whose"], a: "which", note: "中文翻譯：這是我買的房子。" },
+    { q: "Choose the correct sentence:", opts: ["I like to play the piano.", "I like play the piano.", "I am like to play the piano.", "I like playing the piano."], a: "I like to play the piano.", note: "1-1：like 後接 to V 或 Ving [cite: 2, 38]。" },
+    { q: "Choose the correct sentence:", opts: ["He swim every day.", "He swims every day.", "He is swim every day.", "He swimming every day."], a: "He swims every day.", note: "1-2：第三人稱單數習慣性動作，動詞加 s [cite: 2, 42]。" },
+    { q: "Choose the correct sentence:", opts: ["I not his student.", "I am not his student.", "I don't his student.", "I no be his student."], a: "I am not his student.", note: "1-3：B 動詞否定句結構 [cite: 2, 45]。" },
+    { q: "Choose the correct sentence:", opts: ["My father likes to play the violin.", "My father likes to playing violin.", "My father like to play the violin.", "My father is likes to play the violin."], a: "My father likes to play the violin.", note: "1-4：不定詞 to 之後接原形動詞 [cite: 2, 47]。" },
+    { q: "Choose the correct sentence:", opts: ["He can swims.", "He can swim.", "He can to swim.", "He is can swim."], a: "He can swim.", note: "1-5：助動詞 can 後接原形動詞 [cite: 2, 51]。" },
+    { q: "Choose the correct sentence:", opts: ["He hates eat fish.", "He hates to eat fish.", "He hate eat fish.", "He is hate to eat fish."], a: "He hates to eat fish.", note: "1-6：hate 後接不定詞 [cite: 2, 54]。" },
+    { q: "Choose the correct sentence:", opts: ["My father go to church every Sunday.", "My father goes to church every Sunday.", "My father is go to church every Sunday.", "My father going to church every Sunday."], a: "My father goes to church every Sunday.", note: "1-7：規律習慣用現在簡單式，單數加 s [cite: 2, 57]。" },
+    { q: "Choose the correct sentence:", opts: ["He does not love music.", "He do not live music.", "He is not love music.", "He not loves music."], a: "He does not love music.", note: "1-8：一般動詞否定需用助動詞 does [cite: 2, 59]。" },
+    { q: "Choose the correct sentence:", opts: ["He walks to work every day.", "He walks to works every day.", "He walk to work every day.", "He is walk to work every day."], a: "He walks to work every day.", note: "1-9：單數主詞動詞變化及固定片語 walk to work [cite: 2, 62]。" },
+    { q: "Choose the correct sentence:", opts: ["Can he to swim?", "Can he swim?", "Does he can swim?", "Can he swims?"], a: "Can he swim.", note: "1-10：助動詞問句結構 [cite: 2, 66]。" },
+    { q: "Choose the correct sentence:", opts: ["I am walking to school every day.", "I walk to school every day.", "I walks to school every day.", "I am walk to school every day."], a: "I walk to school every day.", note: "1-11：習慣性動作不使用進行式 [cite: 3, 69]。" },
+    { q: "Choose the correct sentence:", opts: ["I watch TV now.", "I am watching TV now.", "I watching TV now.", "I am watch TV now."], a: "I am watching TV now.", note: "1-12：now 提示現在進行式 [cite: 3, 72]。" },
+    { q: "Choose the correct sentence:", opts: ["He calls his father every day.", "He is calling his father every day.", "He call his father every day.", "He calling his father every day."], a: "He calls his father every day.", note: "1-13：每日習慣用現在簡單式 [cite: 3, 74]。" },
+    { q: "Choose the correct sentence:", opts: ["He is taking a walk in the morning every day.", "He takes a walk in the morning every day.", "He take a walk in the morning every day.", "He is take a walk every day."], a: "He takes a walk in the morning every day.", note: "1-14：規律晨間散步用簡單式 [cite: 3, 78]。" },
+    { q: "Choose the correct sentence:", opts: ["He is playing the piano now.", "He plays the piano now.", "He playing the piano now.", "He is play the piano now."], a: "He is playing the piano now.", note: "1-15：正在彈鋼琴 [cite: 3, 80]。" },
+    { q: "Choose the correct sentence:", opts: ["He is reading a book now.", "He reads a book now.", "He reading a book now.", "He is read a book now."], a: "He is reading a book now.", note: "1-16：正在閱讀 [cite: 3, 83]。" },
+    { q: "Choose the correct sentence:", opts: ["He swims every morning.", "He is swimming every morning.", "He swim every morning.", "He swimming every morning."], a: "He swims every morning.", note: "1-17：習慣性晨泳 [cite: 3, 86]。" },
+    { q: "Choose the correct sentence:", opts: ["He is writing a letter at present.", "He writing a letter at present.", "He writes a letter at present.", "He is write a letter at present."], a: "He is writing a letter at present.", note: "1-18：at present 用進行式 [cite: 3, 89]。" },
+    { q: "Choose the correct sentence:", opts: ["He talks to his mother now.", "He is talking to his mother now.", "He talking to his mother now.", "He talk to his mother now."], a: "He is talking to his mother now.", note: "1-19：強調「現在」正在通話 [cite: 3, 93]。" },
+    { q: "Choose the correct sentence:", opts: ["I am swim every day.", "I swim every day.", "I swimming every day.", "I am swimming every day."], a: "I swim every day.", note: "1-20：I 搭配原形動詞表示習慣 [cite: 3, 96]。" },
+    { q: "Choose the correct sentence:", opts: ["I walked to school when I was a kid.", "I walk to school when I was a kid.", "I was walk to school when I was a kid.", "I had walk to school when I was a kid."], a: "I walked to school when I was a kid.", note: "1-21：過去發生的習慣，動詞用過去式 [cite: 4, 98]。" },
+    { q: "Choose the correct sentence:", opts: ["I eat two eggs in the morning today.", "I ate two eggs in the morning today.", "I am eat two eggs in the morning today.", "I eaten two eggs in the morning today."], a: "I ate two eggs in the morning today.", note: "1-22：已完成的動作（吃過了）用過去式 [cite: 4, 102]。" },
+    { q: "Choose the correct sentence:", opts: ["I do not like music when I was young.", "I did not like music when I was young.", "I am not like music when I was young.", "I not liked music when I was young."], a: "I did not like music when I was young.", note: "1-23：過去的否定用 did not [cite: 4, 105]。" },
+    { q: "Choose the correct sentence:", opts: ["I do not go home yesterday.", "I did not go home yesterday.", "I am not go home yesterday.", "I was not go home yesterday."], a: "I did not go home yesterday.", note: "1-24：昨天沒回家，用 did not + 原形 [cite: 4, 108]。" },
+    { q: "Choose the correct sentence:", opts: ["He is already very good in playing piano when he was six.", "He was already very good at playing piano when he was six.", "He is already very good at playing piano when he was six.", "He was already very good in playing piano when he was six."], a: "He was already very good at playing piano when he was six.", note: "1-25：be good at 為固定用法，且時態須一致 [cite: 4, 111]。" },
+    { q: "Choose the correct sentence:", opts: ["They were my students five years ago.", "They are my students five years ago.", "They been my students five years ago.", "They was my students five years ago."], a: "They were my students five years ago.", note: "1-26：複數過去式 B 動詞用 were [cite: 4, 113]。" },
+    { q: "Choose the correct sentence:", opts: ["Did you go to the church last Sunday?", "Do you go the church last Sunday?", "Are you go to the church last Sunday?", "Were you go to the church last Sunday?"], a: "Did you go to the church last Sunday?", note: "1-27：過去時間的問句用 Did [cite: 4, 116]。" },
+    { q: "Choose the correct sentence:", opts: ["I am very sad when I heard the bad news yesterday.", "I was very sad when I heard the bad news yesterday.", "I very sad when I heard the bad news yesterday.", "I am been very sad when I heard the news yesterday."], a: "I was very sad when I heard the bad news yesterday.", note: "1-28：當時感到悲傷，時態需前後一致 [cite: 4, 119]。" },
+    { q: "Choose the correct sentence:", opts: ["He does not know how to swim when he was a kid.", "He did not know how to swim when he was a kid.", "He not know how to swim when he was a kid.", "He is not know how to swim when he was a kid."], a: "He did not know how to swim when he was a kid.", note: "1-29：描述小時候不具備的能力用 past tense [cite: 4, 123]。" },
+    { q: "Choose the correct sentence:", opts: ["The earth goes around the sun.", "The earth went around the sun.", "The earth is go around the sun.", "The earth going around the sun."], a: "The earth goes around the sun.", note: "1-30：真理、事實恆用現在簡單式 [cite: 4, 125]。" },
+    { q: "Choose the correct sentence:", opts: ["When you came to my house, I am calling my father.", "When you came to my house, I was calling my father.", "When you come to my house, I was calling my father.", "When you came to my house, I called my father."], a: "When you came to my house, I was calling my father.", note: "1-31：過去某動作發生時，另一動作正在進行 [cite: 5, 129]。" },
+    { q: "Choose the correct sentence:", opts: ["I could not answer you because I am taking a shower.", "I could not answer you because I was taking a shower.", "I cannot answer you because I was taking a shower.", "I could not answer you because I taken a shower."], a: "I could not answer you because I was taking a shower.", note: "1-32：描述當時正在洗澡，所以沒接電話 [cite: 5, 134]。" },
+    { q: "Choose the correct sentence:", opts: ["When the train reached the station, people are dancing there.", "When the train reached the station, people were dancing there.", "When the train reach the station, people were dancing there.", "When the train reached the station, people danced there."], a: "When the train reached the station, people were dancing there.", note: "1-33：過去進行中的背景動作 [cite: 5, 137]。" },
+    { q: "Choose the correct sentence:", opts: ["When you called me last night, I watched TV.", "When you called me last night, I was watching TV.", "When you call me last night, I am watching TV.", "When you called me last night, I watching TV."], a: "When you called me last night, I was watching TV.", note: "1-34：強調當時「正在看電視」 [cite: 5, 141]。" },
+    { q: "Choose the correct sentence:", opts: ["My mother always cooked when I went home.", "My mother was always cooking when I went home.", "My mother always cook when I went home.", "My mother is always cooking when I went home."], a: "My mother was always cooking when I went home.", note: "1-35：過去習慣性正在發生的動作 [cite: 5, 143]。" },
 ];
 
-let userData = JSON.parse(localStorage.getItem('kana_v5')) || { mastered: 0, currentLevel: 0, failed_list: [], stickers: [] };
+let userData = JSON.parse(localStorage.getItem('kana_v6')) || { mastered: 0, currentLevel: 0, failed_list: [], stickers: [] };
 let currentGroup = [];
 let totalInGroup = 20;
 let isLocked = false;
+let isRetryMode = false;
 
 function init() {
     document.getElementById('mastered-count').innerText = userData.mastered;
-    document.getElementById('lv-display').innerText = userData.currentLevel + 1;
+    document.getElementById('failed-count').innerText = userData.failed_list.length;
     document.getElementById('sticker-count').innerText = userData.stickers.length;
-    if (userData.failed_list.length > 0) document.getElementById('retry-btn').classList.remove('hidden');
+    document.getElementById('retry-btn').style.display = userData.failed_list.length > 0 ? "inline-block" : "none";
 }
 
 function startLevel() {
-    const startIdx = userData.currentLevel * 20;
-    const group = allQuestions.slice(startIdx, startIdx + 20);
-    if (group.length === 0) return alert("太強了！全部題目都攻略完了捏！");
-    currentGroup = group.sort(() => Math.random() - 0.5);
+    isRetryMode = false;
+    const startIdx = (userData.currentLevel % 5) * 20;
+    currentGroup = allQuestions.slice(startIdx, startIdx + 20).sort(() => Math.random() - 0.5);
+    setupGame();
+}
+
+function startRetry() {
+    isRetryMode = true;
+    currentGroup = [...userData.failed_list].sort(() => Math.random() - 0.5);
+    setupGame();
+}
+
+function setupGame() {
     totalInGroup = currentGroup.length;
+    document.getElementById('total-num').innerText = totalInGroup;
     document.getElementById('dashboard').classList.add('hidden');
     document.getElementById('game-zone').classList.remove('hidden');
     renderQuestion();
@@ -149,7 +216,7 @@ function startLevel() {
 
 function renderQuestion() {
     isLocked = false;
-    if (currentGroup.length === 0) { alert("本關完成！"); location.reload(); return; }
+    if (currentGroup.length === 0) return finishLevel();
     
     const data = currentGroup[0];
     document.getElementById('q-text').innerText = data.q;
@@ -167,6 +234,7 @@ function renderQuestion() {
     });
 
     const solved = totalInGroup - currentGroup.length;
+    document.getElementById('progress-num').innerText = solved;
     const p = (solved/totalInGroup)*100;
     document.getElementById('progress-bar').style.width = p + "%";
     document.getElementById('piske-img').style.left = p + "%";
@@ -179,17 +247,22 @@ function handleSelect(opt, b) {
     const overlay = document.getElementById('feedback-overlay');
     const fImg = document.getElementById('feedback-img');
 
-    document.getElementById('hint-area').classList.remove('hidden'); // 點擊後立刻顯示翻譯
+    document.getElementById('hint-area').classList.remove('hidden');
 
     if (opt === cur.a) {
         fImg.src = IMG_YES + "?t=" + Date.now();
         overlay.style.display = "block";
-        b.style.background = "#b2cecf"; // 答對變粉藍色
+        b.style.background = "#b2cecf";
         
+        if (isRetryMode) {
+            userData.failed_list = userData.failed_list.filter(q => q.q !== cur.q);
+        } else {
+            userData.mastered++;
+        }
+
         setTimeout(() => {
             overlay.style.display = "none";
             currentGroup.shift();
-            userData.mastered++;
             saveData();
             renderQuestion();
         }, 1800);
@@ -199,17 +272,53 @@ function handleSelect(opt, b) {
         b.style.background = "#f06292";
         b.style.color = "white";
 
+        if (!isRetryMode && !userData.failed_list.some(q => q.q === cur.q)) {
+            userData.failed_list.push(cur);
+        }
+
         setTimeout(() => {
             overlay.style.display = "none";
-            currentGroup.push(currentGroup.shift()); // 丟到最後一題
+            currentGroup.push(currentGroup.shift());
             renderQuestion();
         }, 2200);
     }
 }
 
-function saveData() { localStorage.setItem('kana_v5', JSON.stringify(userData)); }
-function showBook() { alert("收集冊開發中，請期待下次更新捏！"); } // 這裡可接入之前的貼紙簿代碼
+function finishLevel() {
+    startHeartRain(); // 呼叫下方的愛心雨
+    setTimeout(() => {
+        if (!isRetryMode) userData.currentLevel++;
+        saveData();
+        alert(isRetryMode ? "補考過關捏！" : "攻略成功！送妳滿滿驚喜！");
+        location.reload();
+    }, 3500);
+}
 
+// 🌸 粉紅愛心雨 (nahappy.gif 版)
+function startHeartRain() {
+    for (let i = 0; i < 40; i++) {
+        setTimeout(() => {
+            const heart = document.createElement('img');
+            heart.className = 'heart';
+            heart.src = RAIN_IMAGE;
+            
+            // 隨機左邊位置
+            heart.style.left = Math.random() * 100 + 'vw';
+            // 隨機大小 (40px ~ 90px)
+            const size = Math.random() * 50 + 40;
+            heart.style.width = size + 'px';
+            // 隨機掉落速度 (2s ~ 4s)
+            heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            // 隨機透明度
+            heart.style.opacity = Math.random() * 0.4 + 0.6; 
+            
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+        }, i * 150);
+    }
+}
+
+function saveData() { localStorage.setItem('kana_v6', JSON.stringify(userData)); }
 init();
 </script>
 </body>
