@@ -1,4 +1,3 @@
-// questions.js 檔案內容
 const allQuestions = [
   { q: "This is _______ elephant.", opts: ["a", "an", "the", "X"], a: "an", note: "中文翻譯：這是一隻大象。" },
   { q: "I _______ a teacher.", opts: ["am", "is", "were", "be"], a: "am", note: "中文翻譯：我是一位老師。" },
@@ -1183,4 +1182,5 @@ const allQuestions = [
   { q: "Choose the correct sentence:", options: ["He is good in math really helps him.", "That he is good at math really helps him."], a: "That he is good at math really helps him.", note: "中文翻譯：他擅長數學這件事對他很有幫助。 (文法重點：名詞子句當主詞；且「擅長」片語為 be good at)" },
   { q: "Choose the correct sentence:", options: ["The news the war finally broke out made people sad.", "The news that the war finally broke out made people sad."], a: "The news that the war finally broke out made people sad.", note: "中文翻譯：戰爭終於爆發的消息讓人難過。 (文法重點：that 引導同位語子句，解釋 news 的具體內容)" },
   { q: "Choose the correct sentence:", options: ["I think (that) he should work harder.", "That I think he should work harder."], a: "I think (that) he should work harder.", note: "中文翻譯：我認為他應該更努力。 (文法重點：think 之後的受詞子句 that 可省略；That 不可放在全句開頭當虛詞使用)" },
+
 ];
