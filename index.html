@@ -26,23 +26,21 @@
 
         body { 
             margin: 0; 
-            padding: 10px; 
+            /* 修正 iPhone 遮擋：加入安全區域間隔 */
+            padding: calc(env(safe-area-inset-top) + 15px) 15px 15px 15px;
             background-color: var(--kanahei-pink); 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            /* 修正 iPhone 螢幕佔比，撐滿全螢幕 */
             min-height: 100vh; 
             min-height: -webkit-fill-available;
             overflow-y: auto; 
         }
 
-        html {
-            height: -webkit-fill-available;
-        }
+        html { height: -webkit-fill-available; }
 
         .card {
-            width: 95%; /* 讓寬度佔滿 95%，不再只有 2/3 */
+            width: 100%; 
             max-width: 500px; 
             background: white;
             border: 5px solid var(--kanahei-brown);
@@ -52,11 +50,19 @@
             position: relative; 
             text-align: center;
             margin-top: 5px;
-            flex-grow: 0; /* 確保內容不被過度拉伸 */
         }
 
-        /* 以下為原本的功能樣式，保持不變但優化佈局 */
-        .back-btn { position: absolute; top: 15px; left: 15px; width: 45px; height: 45px; cursor: pointer; z-index: 100; }
+        /* 返回鍵移至右邊 */
+        .back-btn { 
+            position: absolute; 
+            top: 15px; 
+            right: 15px; 
+            width: 45px; 
+            height: 45px; 
+            cursor: pointer; 
+            z-index: 100; 
+        }
+
         .header-gifs { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; }
         .header-gifs img { width: 30%; height: auto; }
         .header-gifs img:nth-child(2) { width: 36%; transform: translateY(-5px); }
@@ -90,12 +96,29 @@
         .bar-inner { height: 100%; width: 0%; background: var(--kanahei-rose); transition: width 0.3s; }
 
         .q-box { font-size: 22px; color: var(--kanahei-brown); margin: 15px 0; text-align: left; line-height: 1.4; padding: 0 5px; }
+        
         .btn-choice { 
             background: white; margin-bottom: 12px; font-size: 19px; 
             border: 3px solid var(--kanahei-brown); border-radius: 18px; 
             width: 100%; padding: 15px; text-align: left; cursor: pointer; color: var(--kanahei-brown);
-            box-shadow: 0 4px 0 #ddd;
+            box-shadow: 0 4px 0 #ddd; transition: background 0.2s;
         }
+
+        /* 答錯修正樣式：亮起正確答案的紅色 */
+        .btn-correct-reveal {
+            background-color: var(--kanahei-rose) !important;
+            color: white !important;
+            border-color: var(--kanahei-brown) !important;
+            box-shadow: 0 4px 0 var(--kanahei-brown) !important;
+        }
+        /* 點錯的選項變灰色 */
+        .btn-wrong-select {
+            background-color: #eee !important;
+            color: #aaa !important;
+            border-color: #ccc !important;
+            box-shadow: none !important;
+        }
+
         .main-btn { 
             width: 100%; padding: 15px; font-size: 22px; border-radius: 30px; 
             background: var(--kanahei-rose); color: white; border: 4px solid var(--kanahei-brown); 
@@ -124,6 +147,7 @@
 
 <div class="card">
     <img id="back-home" src="https://lunakuo1719.github.io/kana-wunfa/back_01.png" class="back-btn hidden" onclick="location.reload()">
+    
     <div id="dashboard">
         <div class="header-gifs">
             <img src="https://lunakuo1719.github.io/kana-wunfa/heade-M.gif">
@@ -155,11 +179,10 @@
 const IMG_YES = "https://lunakuo1719.github.io/kana-wunfa/heartna.gif";
 const IMG_WRONG = "https://lunakuo1719.github.io/kana-wunfa/Wrong.gif";
 
-// 貼紙資料庫網址生成
 const STICKERS_NORMAL = Array.from({length: 70}, (_, i) => `https://lunakuo1719.github.io/kana-wunfa/stickers/${String(i+1).padStart(2, '0')}.jpg`);
 const STICKERS_SPECIAL = Array.from({length: 10}, (_, i) => `https://lunakuo1719.github.io/kana-wunfa/stickers/special/${String(i+1).padStart(2, '0')}.jpg`);
 
-// 題目庫 (保留原本 1100 題，此處縮減示範)
+// 這裡放入妳全部的題目
 const allQuestions = [
     { q: "This is _______ elephant.", opts: ["a", "an", "X", "the"], a: "an", note: "中文翻譯：這是一隻大象。" },
     { q: "I _______ a teacher.", opts: ["am", "is", "were", "be"], a: "am", note: "中文翻譯：我是一位老師。" },
@@ -1043,7 +1066,7 @@ function handleSelect(opt, b) {
     if (opt === cur.a) {
         document.getElementById('feedback-img').src = IMG_YES + "?t=" + Date.now();
         document.getElementById('feedback-overlay').style.display = "block";
-        b.style.background = "#b2cecf";
+        b.style.background = "#b2cecf"; // 答對變淡藍色
         if (isRetryMode) userData.failed_list = userData.failed_list.filter(item => item.q !== cur.q);
         else userData.mastered++;
         setTimeout(() => {
@@ -1055,9 +1078,18 @@ function handleSelect(opt, b) {
     } else {
         document.getElementById('feedback-img').src = IMG_WRONG + "?t=" + Date.now();
         document.getElementById('feedback-overlay').style.display = "block";
-        b.classList.add('btn-wrong-select');
-        choices.forEach(btn => { if (btn.innerText === cur.a) btn.classList.add('btn-correct-reveal'); });
-        if (!isRetryMode && !userData.failed_list.some(item => item.q === cur.q)) userData.failed_list.push(cur);
+        
+        // 答錯邏輯修正
+        b.classList.add('btn-wrong-select'); // 點錯的變灰色
+        choices.forEach(btn => { 
+            if (btn.innerText === cur.a) {
+                btn.classList.add('btn-correct-reveal'); // 正確的亮紅
+            }
+        });
+
+        if (!isRetryMode && !userData.failed_list.some(item => item.q === cur.q)) {
+            userData.failed_list.push(cur);
+        }
         setTimeout(() => {
             document.getElementById('feedback-overlay').style.display = "none";
             currentGroup.push(currentGroup.shift());
@@ -1067,21 +1099,13 @@ function handleSelect(opt, b) {
 }
 
 function finishLevel() {
-    // 抽貼紙邏輯：15% 機率抽稀有款
     const isSpecial = Math.random() < 0.15;
     const pool = isSpecial ? STICKERS_SPECIAL : STICKERS_NORMAL;
     const winUrl = pool[Math.floor(Math.random() * pool.length)];
-
-    // 儲存進收集冊
-    if (!userData.stickers.includes(winUrl)) {
-        userData.stickers.push(winUrl);
-    }
-
-    // 顯示過場動畫
+    if (!userData.stickers.includes(winUrl)) userData.stickers.push(winUrl);
     document.getElementById('reward-img').src = winUrl;
     document.getElementById('win-msg').innerText = isSpecial ? "✨ 驚喜稀有貼紙入手！捏！ ✨" : "獲得新貼紙！捏！";
     document.getElementById('win-overlay').style.display = "flex";
-
     if (!isRetryMode) userData.currentLevel++;
     saveData();
 }
@@ -1089,31 +1113,19 @@ function finishLevel() {
 function openAlbum() {
     const container = document.getElementById('album-container');
     container.innerHTML = "";
-    
-    // 顯示 70 張普通
     STICKERS_NORMAL.forEach((url, index) => {
         const item = document.createElement('div');
         item.className = "album-item";
-        if (userData.stickers.includes(url)) {
-            item.innerHTML = `<img src="${url}">`;
-        } else {
-            item.innerHTML = `<span style="color:#ccc">${index + 1}</span>`;
-        }
+        item.innerHTML = userData.stickers.includes(url) ? `<img src="${url}">` : `<span style="color:#ccc">${index + 1}</span>`;
         container.appendChild(item);
     });
-
-    // 顯示 10 張稀有
     STICKERS_SPECIAL.forEach((url, index) => {
         const item = document.createElement('div');
-        item.className = "album-item special-item";
-        if (userData.stickers.includes(url)) {
-            item.innerHTML = `<img src="${url}">`;
-        } else {
-            item.innerHTML = `<span style="color:var(--kanahei-rose)">★</span>`;
-        }
+        item.className = "album-item";
+        item.style.borderColor = "var(--kanahei-rose)";
+        item.innerHTML = userData.stickers.includes(url) ? `<img src="${url}">` : `<span style="color:var(--kanahei-rose)">★</span>`;
         container.appendChild(item);
     });
-
     document.getElementById('collection-overlay').style.display = "flex";
 }
 
