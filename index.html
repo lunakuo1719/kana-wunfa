@@ -14,7 +14,6 @@
             --kanahei-brown: #6d4c41; 
             --kanahei-cream: #fff9c4; 
             --gold: #fbc02d;
-            --soft-white: #ffffff;
         }
 
         * { 
@@ -27,70 +26,72 @@
         body { 
             margin: 0; 
             padding: env(safe-area-inset-top) 15px env(safe-area-inset-bottom) 15px;
-            /* 配色優化：改為柔和漸層 */
             background: linear-gradient(135deg, var(--kanahei-pink) 0%, #fff0f5 100%); 
             display: flex; 
-            flex-direction: column; /* 讓內容垂直排列 */
+            flex-direction: column; 
             justify-content: center; 
             align-items: center; 
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh; /* 改為最小高度，確保電腦版不會切到內容 */
+            overflow-x: hidden;
         }
 
         .card {
             width: 100%;
             max-width: 450px;
-            height: 85vh; /* 縮小一點卡片高度，留空間給下方的返回鍵 */
+            /* 優化：在手機上使用比例，在電腦版限制最大高度 */
+            height: 82vh;
+            max-height: 850px; 
             background: white;
             border: 4px solid var(--kanahei-brown);
             border-radius: 40px; 
             padding: 20px;
-            box-shadow: 0px 8px 15px rgba(240, 98, 146, 0.3); /* 美化：增加柔和陰影 */
+            box-shadow: 0px 8px 25px rgba(240, 98, 146, 0.2);
             position: relative;
             display: flex;
             flex-direction: column;
             z-index: 2;
         }
 
-        /* 返回鍵重製：移至下方空白處 */
+        /* 返回鍵容器優化：確保在電腦版也置中 */
         .back-home-container {
             width: 100%;
+            max-width: 450px;
             display: flex;
             justify-content: center;
             padding: 15px 0;
             z-index: 10;
         }
         .back-btn-large { 
-            width: 70px; /* 加大圖示 */
-            height: 70px; 
+            width: 65px; 
+            height: 65px; 
             cursor: pointer;
-            filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.2));
+            filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.15));
             transition: transform 0.2s;
         }
+        .back-btn-large:hover { transform: scale(1.1); }
         .back-btn-large:active { transform: scale(0.9); }
 
         .header-gifs { 
             display: flex; justify-content: center; align-items: flex-end; 
-            gap: 10px; margin: 10px 0 10px 0;
+            gap: 10px; margin: 5px 0 10px 0;
         }
-        .header-gifs img { width: 25%; height: auto; max-width: 90px; }
-        .header-gifs img:nth-child(2) { width: 32%; max-width: 120px; }
+        .header-gifs img { width: 22%; height: auto; max-width: 80px; }
+        .header-gifs img:nth-child(2) { width: 30%; max-width: 100px; }
 
         .daily-tip-box {
             background: white; border: 2px solid var(--kanahei-rose);
-            border-radius: 15px; padding: 15px; margin-bottom: 15px;
+            border-radius: 15px; padding: 12px; margin-bottom: 15px;
             font-size: 18px; color: var(--kanahei-brown); line-height: 1.5;
-            box-shadow: inset 0 0 10px var(--kanahei-pink);
+            box-shadow: inset 0 0 8px var(--kanahei-pink);
         }
-        .daily-tip-box b { color: var(--kanahei-rose); }
 
-        .progress-container { margin: 15px 0 35px 0; position: relative; height: 50px; }
+        .progress-container { margin: 10px 0 30px 0; position: relative; height: 45px; }
         .piske-runner { 
-            position: absolute; bottom: 15px; width: 65px; 
-            transition: left 0.3s; margin-left: -32px; z-index: 10;
+            position: absolute; bottom: 12px; width: 60px; 
+            transition: left 0.3s; margin-left: -30px; z-index: 10;
         }
         .bar-outer { 
-            height: 18px; background: var(--kanahei-cream); 
+            height: 16px; background: var(--kanahei-cream); 
             border: 3px solid var(--kanahei-brown); border-radius: 15px; 
             width: 100%; position: absolute; bottom: 0;
         }
@@ -98,17 +99,19 @@
 
         .q-box { 
             font-size: 26px; color: var(--kanahei-brown); 
-            margin-bottom: 25px; text-align: left; line-height: 1.5;
-            min-height: 80px;
+            margin-bottom: 20px; text-align: left; line-height: 1.4;
+            min-height: 70px;
         }
 
         .btn-choice { 
-            background: white; margin-bottom: 15px; font-size: 22px; 
+            background: white; margin-bottom: 12px; font-size: 20px; 
             border: 3px solid var(--kanahei-brown); border-radius: 20px; 
-            width: 100%; padding: 18px; text-align: left; 
-            color: var(--kanahei-brown); box-shadow: 0 6px 0 #eee; /* 增加一點陰影深度 */
+            width: 100%; padding: 15px; text-align: left; 
+            color: var(--kanahei-brown); box-shadow: 0 5px 0 #eee;
             transition: all 0.1s;
+            cursor: pointer;
         }
+        .btn-choice:hover { background-color: #fff9f9; }
         .btn-choice:active { transform: translateY(3px); box-shadow: 0 2px 0 #eee; }
 
         .translation-box { 
@@ -116,10 +119,9 @@
             padding: 15px; border-radius: 20px; 
             font-size: 18px; border: 3px solid var(--gold); 
             color: var(--kanahei-brown); text-align: left;
-            margin-top: auto; margin-bottom: 5px;
+            margin-top: auto;
             box-shadow: 2px 2px 8px rgba(0,0,0,0.05);
-            animation: popUp 0.3s ease-out;
-            overflow-y: auto; max-height: 150px;
+            overflow-y: auto; max-height: 120px;
         }
         .translation-box::before {
             content: "📜 討伐攻略筆記：";
@@ -128,25 +130,21 @@
             border-bottom: 1px dashed var(--gold);
         }
 
-        @keyframes popUp {
-            0% { transform: scale(0.9); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
         .main-btn { 
-            width: 100%; padding: 18px; font-size: 24px; border-radius: 35px; 
+            width: 100%; padding: 16px; font-size: 22px; border-radius: 35px; 
             background: var(--kanahei-rose); color: white; border: 4px solid var(--kanahei-brown); 
-            box-shadow: 0 5px 0 var(--kanahei-brown); margin: 10px 0;
-            transition: 0.1s;
+            box-shadow: 0 5px 0 var(--kanahei-brown); margin: 8px 0;
+            cursor: pointer;
         }
         .main-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--kanahei-brown); }
 
         .hidden { display: none !important; }
 
-        #feedback-overlay {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 999; display: none; pointer-events: none;
-        }
+        /* 電腦版捲軸美化 */
+        .card::-webkit-scrollbar, .translation-box::-webkit-scrollbar { width: 6px; }
+        .card::-webkit-scrollbar-thumb, .translation-box::-webkit-scrollbar-thumb { background: var(--kanahei-rose); border-radius: 10px; }
+
+        #feedback-overlay { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 999; display: none; pointer-events: none; }
         #feedback-overlay img { width: 180px; }
 
         #win-overlay {
@@ -168,11 +166,11 @@
 </div>
 
 <div id="collection-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; display: none; flex-direction: column; z-index: 2000; padding: 20px; overflow-y: auto;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: 0 auto; width: 100%;">
         <h2 style="color: var(--kanahei-rose); font-size: 24px;">我的收集冊</h2>
-        <button onclick="document.getElementById('collection-overlay').style.display='none'" style="padding: 10px 20px; border-radius: 15px; border: 2px solid var(--kanahei-brown); font-size: 18px;">關閉</button>
+        <button onclick="document.getElementById('collection-overlay').style.display='none'" style="padding: 10px 20px; border-radius: 15px; border: 2px solid var(--kanahei-brown); font-size: 18px; cursor: pointer;">關閉</button>
     </div>
-    <div id="album-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px;"></div>
+    <div id="album-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto;"></div>
 </div>
 
 <div class="card">
@@ -207,7 +205,7 @@
             <div class="bar-outer"><div class="bar-inner" id="progress-bar"></div></div>
         </div>
         <div id="q-text" class="q-box"></div>
-        <div id="choices-area" style="flex-grow: 1;"></div>
+        <div id="choices-area" style="flex-grow: 1; overflow-y: auto;"></div>
         <div id="hint-area" class="translation-box hidden"><span id="hint-text"></span></div>
     </div>
 </div>
@@ -217,9 +215,7 @@
 </div>
 
 <script>
-// ==========================================
-// 題庫區：請在此貼上你所有的題庫資料
-// ==========================================
+// [此處邏輯保持不變，同前一版本]
 const allQuestions = [
   { q: "This is _______ elephant.", opts: ["a", "an", "the", "X"], a: "an", note: "中文翻譯：這是一隻大象。" },
   { q: "I _______ a teacher.", opts: ["am", "is", "were", "be"], a: "am", note: "中文翻譯：我是一位老師。" },
@@ -1406,9 +1402,6 @@ const allQuestions = [
   { q: "Choose the correct sentence:", options: ["I think (that) he should work harder.", "That I think he should work harder."], a: "I think (that) he should work harder.", note: "中文翻譯：我認為他應該更努力。 (文法重點：think 之後的受詞子句 that 可省略；That 不可放在全句開頭當虛詞使用)" },
 ];
 
-// ==========================================
-// 主程式邏輯 (保持原有邏輯，僅微調介面控制)
-// ==========================================
 const IMG_YES = "https://lunakuo1719.github.io/kana-wunfa/heartna.gif";
 const IMG_WRONG = "https://lunakuo1719.github.io/kana-wunfa/Wrong.gif";
 const STICKERS_NORMAL = Array.from({length: 70}, (_, i) => `https://lunakuo1719.github.io/kana-wunfa/stickers/${String(i+1).padStart(2, '0')}.jpg`);
@@ -1459,7 +1452,6 @@ function setupGame() {
     document.getElementById('total-num').innerText = totalInGroup;
     document.getElementById('dashboard').classList.add('hidden');
     document.getElementById('game-zone').classList.remove('hidden');
-    // 顯示下方的返回鍵容器
     document.getElementById('back-home-wrapper').classList.remove('hidden');
     renderQuestion();
 }
@@ -1501,13 +1493,11 @@ function handleSelect(opt, b) {
         document.getElementById('feedback-img').src = IMG_YES + "?t=" + Date.now();
         document.getElementById('feedback-overlay').style.display = "block";
         b.style.backgroundColor = "#b2cecf"; 
-        
         if (isRetryMode) {
             userData.failed_list = userData.failed_list.filter(item => item.q !== cur.q);
         } else {
             userData.mastered++;
         }
-        
         setTimeout(() => {
             document.getElementById('feedback-overlay').style.display = "none";
             currentGroup.shift();
@@ -1519,18 +1509,15 @@ function handleSelect(opt, b) {
         document.getElementById('feedback-overlay').style.display = "block";
         b.style.backgroundColor = "#eee";
         b.style.color = "#aaa";
-        
         choices.forEach(btn => { 
             if (btn.innerText === cur.a) { 
                 btn.style.backgroundColor = "var(--kanahei-rose)"; 
                 btn.style.color="white"; 
             } 
         });
-
         if (!isRetryMode && !userData.failed_list.some(item => item.q === cur.q)) {
             userData.failed_list.push(cur);
         }
-
         setTimeout(() => {
             document.getElementById('feedback-overlay').style.display = "none";
             currentGroup.push(currentGroup.shift());
@@ -1544,11 +1531,9 @@ function finishLevel() {
     const pool = isSpecial ? STICKERS_SPECIAL : STICKERS_NORMAL;
     const winUrl = pool[Math.floor(Math.random() * pool.length)];
     if (!userData.stickers.includes(winUrl)) userData.stickers.push(winUrl);
-    
     document.getElementById('reward-img').src = winUrl;
     document.getElementById('win-msg').innerText = isSpecial ? "✨ 驚喜稀有貼紙入手！捏！ ✨" : "獲得新貼紙！捏！";
     document.getElementById('win-overlay').style.display = "flex";
-    
     if (!isRetryMode) userData.currentLevel++;
     saveData();
 }
@@ -1568,4 +1553,3 @@ function openAlbum() {
 function saveData() { localStorage.setItem('kana_v9', JSON.stringify(userData)); }
 init();
 </script></body></html>
-
