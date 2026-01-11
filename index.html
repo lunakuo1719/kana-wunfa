@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <link rel="apple-touch-icon" href="https://lunakuo1719.github.io/kana-wunfa/nanaicon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>文法討伐團~捏！</title>
+
     <style>
         :root {
             --kanahei-pink: #fce4ec; 
@@ -12,25 +17,46 @@
             --kanahei-cream: #fff9c4; 
         }
 
-        * { box-sizing: border-box; font-family: 'Arial', sans-serif; font-weight: 900; -webkit-tap-highlight-color: transparent; }
+        * { 
+            box-sizing: border-box; 
+            font-family: 'Arial', sans-serif; 
+            font-weight: 900; 
+            -webkit-tap-highlight-color: transparent; 
+        }
 
         body { 
-            margin: 0; padding: 10px; background-color: var(--kanahei-pink); 
-            display: flex; flex-direction: column; align-items: center; 
-            min-height: 100vh; overflow-y: auto; 
+            margin: 0; 
+            padding: 10px; 
+            background-color: var(--kanahei-pink); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            /* 修正 iPhone 螢幕佔比，撐滿全螢幕 */
+            min-height: 100vh; 
+            min-height: -webkit-fill-available;
+            overflow-y: auto; 
+        }
+
+        html {
+            height: -webkit-fill-available;
         }
 
         .card {
-            width: 100%; max-width: 500px; background: white;
+            width: 95%; /* 讓寬度佔滿 95%，不再只有 2/3 */
+            max-width: 500px; 
+            background: white;
             border: 5px solid var(--kanahei-brown);
-            border-radius: 35px; padding: 15px;
+            border-radius: 35px; 
+            padding: 20px 15px;
             box-shadow: 0px 8px 0px var(--kanahei-rose);
-            position: relative; text-align: center;
-            margin-top: 10px;
+            position: relative; 
+            text-align: center;
+            margin-top: 5px;
+            flex-grow: 0; /* 確保內容不被過度拉伸 */
         }
 
+        /* 以下為原本的功能樣式，保持不變但優化佈局 */
         .back-btn { position: absolute; top: 15px; left: 15px; width: 45px; height: 45px; cursor: pointer; z-index: 100; }
-
         .header-gifs { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; }
         .header-gifs img { width: 30%; height: auto; }
         .header-gifs img:nth-child(2) { width: 36%; transform: translateY(-5px); }
@@ -41,16 +67,14 @@
         }
         #feedback-overlay img { width: 180px; filter: drop-shadow(0 0 10px white); }
 
-        /* 通關慶祝層 */
         #win-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(255, 255, 255, 0.95);
             display: none; flex-direction: column; justify-content: center;
             align-items: center; z-index: 1000; text-align: center;
         }
-        #win-overlay .reward-img { width: 220px; height: 220px; border: 6px solid var(--kanahei-brown); border-radius: 20px; margin: 15px 0; object-fit: cover; }
+        #win-overlay .reward-img { width: 250px; height: 250px; border: 6px solid var(--kanahei-brown); border-radius: 20px; margin: 15px 0; object-fit: cover; }
 
-        /* 收集冊層 */
         #collection-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: white; display: none; flex-direction: column; z-index: 2000; padding: 20px; overflow-y: auto;
@@ -58,7 +82,6 @@
         .album-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
         .album-item { aspect-ratio: 1; border: 2px dashed #ccc; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: #fafafa; overflow: hidden; }
         .album-item img { width: 100%; height: 100%; object-fit: cover; }
-        .special-item { border: 2px solid var(--kanahei-rose); background: #fffde7; }
 
         .progress-info { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; color: var(--kanahei-brown); padding: 0 5px; }
         .progress-container { margin-bottom: 15px; position: relative; height: 45px; }
@@ -66,22 +89,18 @@
         .bar-outer { height: 12px; background: var(--kanahei-cream); border: 2px solid var(--kanahei-brown); border-radius: 10px; overflow: hidden; }
         .bar-inner { height: 100%; width: 0%; background: var(--kanahei-rose); transition: width 0.3s; }
 
-        .q-box { font-size: 20px; color: var(--kanahei-brown); margin: 10px 0; text-align: left; line-height: 1.3; padding: 0 5px; }
+        .q-box { font-size: 22px; color: var(--kanahei-brown); margin: 15px 0; text-align: left; line-height: 1.4; padding: 0 5px; }
         .btn-choice { 
-            background: white; margin-bottom: 10px; font-size: 19px; 
-            border: 3px solid var(--kanahei-brown); border-radius: 15px; 
-            width: 100%; padding: 12px; text-align: left; cursor: pointer; color: var(--kanahei-brown);
+            background: white; margin-bottom: 12px; font-size: 19px; 
+            border: 3px solid var(--kanahei-brown); border-radius: 18px; 
+            width: 100%; padding: 15px; text-align: left; cursor: pointer; color: var(--kanahei-brown);
             box-shadow: 0 4px 0 #ddd;
         }
-        .btn-correct-reveal { background-color: var(--kanahei-rose) !important; color: white !important; }
-        .btn-wrong-select { background-color: #eee !important; color: #aaa !important; box-shadow: none !important; }
-
         .main-btn { 
-            width: 90%; padding: 15px; font-size: 22px; border-radius: 30px; 
+            width: 100%; padding: 15px; font-size: 22px; border-radius: 30px; 
             background: var(--kanahei-rose); color: white; border: 4px solid var(--kanahei-brown); 
-            cursor: pointer; box-shadow: 0 5px 0 var(--kanahei-brown); margin: 8px 0;
+            cursor: pointer; box-shadow: 0 5px 0 var(--kanahei-brown); margin: 10px 0;
         }
-
         .translation-box { background: #fff9c4; padding: 15px; border-radius: 20px; margin-top: 10px; font-size: 17px; border: 3px dashed var(--kanahei-rose); color: #d81b60; text-align: left; }
         .hidden { display: none; }
     </style>
@@ -89,14 +108,12 @@
 <body>
 
 <div id="feedback-overlay"><img id="feedback-img" src=""></div>
-
 <div id="win-overlay" onclick="location.reload()">
     <h2 id="win-msg" style="color: var(--kanahei-rose); margin: 0;">獲得新貼紙！捏！</h2>
     <img id="reward-img" class="reward-img" src="">
     <h1 style="color: var(--kanahei-brown); margin: 0;">攻略成功！捏！</h1>
     <p>點擊畫面回到首頁</p>
 </div>
-
 <div id="collection-overlay">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <h2 style="color: var(--kanahei-rose);">我的收集冊</h2>
@@ -107,7 +124,6 @@
 
 <div class="card">
     <img id="back-home" src="https://lunakuo1719.github.io/kana-wunfa/back_01.png" class="back-btn hidden" onclick="location.reload()">
-
     <div id="dashboard">
         <div class="header-gifs">
             <img src="https://lunakuo1719.github.io/kana-wunfa/heade-M.gif">
@@ -115,21 +131,16 @@
             <img src="https://lunakuo1719.github.io/kana-wunfa/heade_r.gif">
         </div>
         <h1 style="color: var(--kanahei-rose); margin:5px 0; font-size: 26px;">文法討伐團~捏！</h1>
-        
         <div style="background: var(--kanahei-cream); padding: 15px; border-radius: 25px; border: 3px solid var(--kanahei-brown); margin: 15px 0;">
             <p style="font-size:18px; margin:5px 0;">已熟練：<span id="mastered-count" style="color:var(--kanahei-rose)">0</span></p>
             <p style="font-size:18px; margin:5px 0;">錯題數：<span id="failed-count">0</span> | 貼紙：<span id="sticker-count">0</span>/80</p>
         </div>
-
         <button class="main-btn" onclick="startLevel()">開始討伐！</button>
         <button id="retry-btn" class="main-btn" style="background:#b2cecf; display:none;" onclick="startRetry()">錯題補考</button>
         <button class="main-btn" style="background:#ffd54f;" onclick="openAlbum()">我的收集冊</button>
     </div>
-
     <div id="game-zone" class="hidden">
-        <div class="progress-info" style="margin-top: 40px;"> <span>討伐進行中...</span>
-            <span><span id="progress-num">0</span> / <span id="total-num">20</span></span>
-        </div>
+        <div class="progress-info" style="margin-top: 40px;"><span>討伐進行中...</span><span><span id="progress-num">0</span> / <span id="total-num">20</span></span></div>
         <div class="progress-container">
             <img id="piske-img" src="https://lunakuo1719.github.io/kana-wunfa/giphy_haha.gif" class="piske-runner">
             <div class="bar-outer"><div class="bar-inner" id="progress-bar"></div></div>
