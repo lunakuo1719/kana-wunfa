@@ -31,14 +31,13 @@
             flex-direction: column; 
             justify-content: center; 
             align-items: center; 
-            min-height: 100vh; /* 改為最小高度，確保電腦版不會切到內容 */
+            min-height: 100vh;
             overflow-x: hidden;
         }
 
         .card {
             width: 100%;
             max-width: 450px;
-            /* 優化：在手機上使用比例，在電腦版限制最大高度 */
             height: 82vh;
             max-height: 850px; 
             background: white;
@@ -52,24 +51,33 @@
             z-index: 2;
         }
 
-        /* 返回鍵容器優化：確保在電腦版也置中 */
+        /* 返回鍵容器：置中且留出空間 */
         .back-home-container {
             width: 100%;
             max-width: 450px;
             display: flex;
             justify-content: center;
-            padding: 15px 0;
+            padding: 10px 0;
             z-index: 10;
         }
-        .back-btn-large { 
-            width: 65px; 
-            height: 65px; 
+
+        /* GIF 返回鍵專屬樣式 */
+        .back-btn-gif { 
+            width: 85px; /* 加大 GIF 尺寸 */
+            height: auto; 
             cursor: pointer;
-            filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.15));
-            transition: transform 0.2s;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: floating 3s ease-in-out infinite; /* 加入漂浮動畫 */
         }
-        .back-btn-large:hover { transform: scale(1.1); }
-        .back-btn-large:active { transform: scale(0.9); }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .back-btn-gif:hover { transform: scale(1.1); }
+        .back-btn-gif:active { transform: scale(0.9) translateY(0); }
 
         .header-gifs { 
             display: flex; justify-content: center; align-items: flex-end; 
@@ -211,11 +219,11 @@
 </div>
 
 <div id="back-home-wrapper" class="back-home-container hidden">
-    <img id="back-home" src="https://lunakuo1719.github.io/kana-wunfa/back_01.png" class="back-btn-large" onclick="location.reload()">
+    <img id="back-home" src="https://lunakuo1719.github.io/kana-wunfa/backhome.gif" class="back-btn-gif" onclick="location.reload()" alt="返回首頁">
 </div>
 
 <script>
-// [此處邏輯保持不變，同前一版本]
+// [以下邏輯保持不變]
 const allQuestions = [
   { q: "This is _______ elephant.", opts: ["a", "an", "the", "X"], a: "an", note: "中文翻譯：這是一隻大象。" },
   { q: "I _______ a teacher.", opts: ["am", "is", "were", "be"], a: "am", note: "中文翻譯：我是一位老師。" },
