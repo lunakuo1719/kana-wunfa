@@ -26,17 +26,15 @@
 
         body { 
             margin: 0; 
-            /* 加入 env() 避開瀏海，並增加底部空間 */
             padding: calc(env(safe-area-inset-top) + 10px) 15px 20px 15px;
             background-color: var(--kanahei-pink); 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            /* 關鍵修正：讓內容垂直置中，不會全部黏在上面 */
             justify-content: center; 
             height: 100vh; 
             height: -webkit-fill-available;
-            overflow: hidden; /* 禁止整頁滾動，只讓卡片內部滾動 */
+            overflow: hidden; 
         }
 
         html { height: -webkit-fill-available; }
@@ -44,48 +42,44 @@
         .card {
             width: 100%; 
             max-width: 500px; 
-            /* 關鍵修正：強制卡片高度佔螢幕 85%，解決下方空蕩蕩的問題 */
             height: 85vh; 
             background: white;
             border: 5px solid var(--kanahei-brown);
             border-radius: 35px; 
-            padding: 25px 20px; /* 增加內部留白 */
+            /* 修正1：底部 Padding 加大到 40px，防止翻譯被圓角切到 */
+            padding: 25px 20px 40px 20px; 
             box-shadow: 0px 8px 0px var(--kanahei-rose);
             position: relative; 
             text-align: center;
-            
-            /* 讓卡片內部變成彈性盒子，可以把內容撐開 */
             display: flex;
             flex-direction: column;
-            overflow-y: auto; /* 如果內容真的太多，卡片內部可以滑動 */
+            overflow-y: auto; /* 內容過多時可捲動 */
+            -webkit-overflow-scrolling: touch; /* 讓 iPhone 捲動更滑順 */
         }
 
-        /* 修正：遊戲區域撐滿剩餘空間，讓選項不會擠在最上面 */
         #game-zone {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
         
-        /* 調整題目下方的空間 */
-        #choices-area {
-            margin-top: 20px;
-        }
+        #choices-area { margin-top: 10px; }
 
-        /* 返回鍵保持在右邊 */
+        /* 修正2：返回鍵加大 */
         .back-btn { 
             position: absolute; 
             top: 20px; 
             right: 20px; 
-            width: 45px; 
-            height: 45px; 
+            width: 55px; /* 加大 */
+            height: 55px; /* 加大 */
             cursor: pointer; 
             z-index: 100; 
         }
 
-        .header-gifs { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; }
-        .header-gifs img { width: 30%; height: auto; }
-        .header-gifs img:nth-child(2) { width: 36%; transform: translateY(-5px); }
+        /* 修正3：頂部圖案加大 */
+        .header-gifs { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; }
+        .header-gifs img { width: 32%; height: auto; } /* 原本 30% -> 32% */
+        .header-gifs img:nth-child(2) { width: 38%; transform: translateY(-5px); } /* 中間那隻更大 */
 
         #feedback-overlay {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -109,13 +103,32 @@
         .album-item { aspect-ratio: 1; border: 2px dashed #ccc; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: #fafafa; overflow: hidden; }
         .album-item img { width: 100%; height: 100%; object-fit: cover; }
 
-        .progress-info { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; color: var(--kanahei-brown); padding: 0 5px; }
-        .progress-container { margin-bottom: 15px; position: relative; height: 45px; flex-shrink: 0; }
-        .piske-runner { position: absolute; bottom: 8px; width: 50px; transition: left 0.3s; margin-left: -25px; }
-        .bar-outer { height: 12px; background: var(--kanahei-cream); border: 2px solid var(--kanahei-brown); border-radius: 10px; overflow: hidden; }
+        .progress-info { display: flex; justify-content: space-between; font-size: 16px; margin-bottom: 5px; color: var(--kanahei-brown); padding: 0 5px; font-weight: bold; }
+        
+        /* 修正4：進度條與 P 助加大 */
+        .progress-container { margin-bottom: 25px; position: relative; height: 50px; flex-shrink: 0; }
+        .piske-runner { 
+            position: absolute; 
+            bottom: 12px; /* 配合變粗的進度條調整位置 */
+            width: 70px; /* 原本 50px -> 70px */
+            transition: left 0.3s; 
+            margin-left: -35px; /* 修正中心點 */
+            z-index: 10;
+        }
+        .bar-outer { 
+            height: 20px; /* 原本 12px -> 20px */
+            background: var(--kanahei-cream); 
+            border: 3px solid var(--kanahei-brown); 
+            border-radius: 15px; 
+            overflow: hidden; 
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
         .bar-inner { height: 100%; width: 0%; background: var(--kanahei-rose); transition: width 0.3s; }
 
-        .q-box { font-size: 24px; color: var(--kanahei-brown); margin: 20px 0 30px 0; text-align: left; line-height: 1.5; padding: 0 5px; flex-grow: 0; }
+        /* 修正5：題目字體稍微加大 */
+        .q-box { font-size: 26px; color: var(--kanahei-brown); margin: 10px 0 20px 0; text-align: left; line-height: 1.4; padding: 0 5px; flex-grow: 0; }
         
         .btn-choice { 
             background: white; margin-bottom: 15px; font-size: 20px; 
@@ -142,8 +155,20 @@
             background: var(--kanahei-rose); color: white; border: 4px solid var(--kanahei-brown); 
             cursor: pointer; box-shadow: 0 5px 0 var(--kanahei-brown); margin: 10px 0;
         }
-        .translation-box { background: #fff9c4; padding: 15px; border-radius: 20px; margin-top: auto; font-size: 17px; border: 3px dashed var(--kanahei-rose); color: #d81b60; text-align: left; margin-bottom: 10px; }
-        .hidden { display: none !important; } /* 加強 hidden 權重 */
+        .translation-box { 
+            background: #fff9c4; 
+            padding: 15px; 
+            border-radius: 20px; 
+            margin-top: auto; 
+            font-size: 18px; 
+            border: 3px dashed var(--kanahei-rose); 
+            color: #d81b60; 
+            text-align: left; 
+            margin-bottom: 5px; 
+            /* 確保翻譯框本身不會太擠 */
+            line-height: 1.5;
+        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
