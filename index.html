@@ -7,7 +7,7 @@
     <link rel="apple-touch-icon" href="https://lunakuo1719.github.io/kana-wunfa/nanaicon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>文法討伐團</title>
+    <title>文法討伐團~捏！</title>
 
     <style>
         :root {
@@ -15,6 +15,7 @@
             --kanahei-rose: #f06292; 
             --kanahei-brown: #6d4c41; 
             --kanahei-cream: #fff9c4; 
+            --gold: #fbc02d;
         }
 
         * { 
@@ -38,7 +39,7 @@
         .card {
             width: 100%;
             max-width: 450px;
-            height: 88vh; /* 稍微拉長一點點，比例更像手機App */
+            height: 90vh;
             background: white;
             border: 4px solid var(--kanahei-brown);
             border-radius: 40px; 
@@ -49,93 +50,81 @@
             flex-direction: column;
         }
 
-        /* 返回鍵：大小適中且位於安全位置 */
         .back-btn { 
-            position: absolute; 
-            top: 15px; 
-            right: 15px; 
-            width: 50px; 
-            height: 50px; 
-            z-index: 100;
-            cursor: pointer;
+            position: absolute; top: 15px; right: 15px; 
+            width: 50px; height: 50px; z-index: 100; cursor: pointer;
         }
 
-        /* 頂部圖案：使用彈性寬度避免過大或過小 */
         .header-gifs { 
-            display: flex; 
-            justify-content: center; 
-            align-items: flex-end; 
-            gap: 10px;
-            margin: 10px 0 15px 0;
+            display: flex; justify-content: center; align-items: flex-end; 
+            gap: 10px; margin: 10px 0 15px 0;
         }
         .header-gifs img { width: 28%; height: auto; max-width: 100px; }
         .header-gifs img:nth-child(2) { width: 35%; max-width: 130px; }
 
-        /* 進度條區域：增加垂直間距 */
-        .progress-container { 
-            margin: 10px 0 30px 0; 
-            position: relative; 
-            height: 50px; 
+        /* 首頁長老語錄區 */
+        .daily-tip-box {
+            background: white;
+            border: 2px solid var(--kanahei-rose);
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: var(--kanahei-brown);
+            position: relative;
+            line-height: 1.4;
         }
+        .daily-tip-box b { color: var(--kanahei-rose); }
+
+        .progress-container { margin: 10px 0 30px 0; position: relative; height: 50px; }
         .piske-runner { 
-            position: absolute; 
-            bottom: 12px; 
-            width: 65px; 
-            transition: left 0.3s; 
-            margin-left: -32px; 
-            z-index: 10;
+            position: absolute; bottom: 12px; width: 65px; 
+            transition: left 0.3s; margin-left: -32px; z-index: 10;
         }
         .bar-outer { 
-            height: 18px; 
-            background: var(--kanahei-cream); 
-            border: 3px solid var(--kanahei-brown); 
-            border-radius: 15px; 
-            width: 100%;
-            position: absolute;
-            bottom: 0;
+            height: 18px; background: var(--kanahei-cream); 
+            border: 3px solid var(--kanahei-brown); border-radius: 15px; 
+            width: 100%; position: absolute; bottom: 0;
         }
         .bar-inner { height: 100%; width: 0%; background: var(--kanahei-rose); transition: width 0.3s; }
 
-        /* 題目區：增加文字大小與行高，提升閱讀舒適度 */
         .q-box { 
-            font-size: 24px; 
-            color: var(--kanahei-brown); 
-            margin-bottom: 25px; 
-            text-align: left; 
-            line-height: 1.5;
-            min-height: 80px; /* 確保簡短題目也有基本高度 */
+            font-size: 24px; color: var(--kanahei-brown); 
+            margin-bottom: 25px; text-align: left; line-height: 1.4;
+            min-height: 60px;
         }
 
-        /* 選項按鈕：增加按壓感 */
         .btn-choice { 
-            background: white; 
-            margin-bottom: 12px; 
-            font-size: 19px; 
-            border: 3px solid var(--kanahei-brown); 
-            border-radius: 20px; 
-            width: 100%; 
-            padding: 16px; 
-            text-align: left; 
-            color: var(--kanahei-brown);
-            box-shadow: 0 4px 0 #ddd;
+            background: white; margin-bottom: 12px; font-size: 19px; 
+            border: 3px solid var(--kanahei-brown); border-radius: 20px; 
+            width: 100%; padding: 16px; text-align: left; 
+            color: var(--kanahei-brown); box-shadow: 0 4px 0 #ddd;
             transition: all 0.1s;
         }
         .btn-choice:active { transform: translateY(2px); box-shadow: 0 2px 0 #ddd; }
 
-        /* 翻譯框：專業修正，使用底部固定與適當內距避免遮擋 */
+        /* 攻略筆記提示框 (美化版) */
         .translation-box { 
-            background: #fffef0; 
-            padding: 15px; 
-            border-radius: 20px; 
-            font-size: 17px; 
-            border: 2px dashed var(--kanahei-rose); 
-            color: #d81b60; 
-            text-align: left;
-            margin-top: auto; /* 推到最下面 */
-            margin-bottom: 10px; /* 距離白色邊框底部留點空隙 */
+            background: var(--kanahei-cream); 
+            padding: 15px; border-radius: 20px; 
+            font-size: 16px; border: 3px solid var(--gold); 
+            color: var(--kanahei-brown); text-align: left;
+            margin-top: auto; margin-bottom: 10px;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.05);
+            animation: popUp 0.3s ease-out;
+        }
+        .translation-box::before {
+            content: "📜 討伐攻略筆記：";
+            display: block; font-size: 13px; font-weight: 900;
+            color: var(--kanahei-rose); margin-bottom: 5px;
+            border-bottom: 1px dashed var(--gold);
         }
 
-        /* 首頁按鈕優化 */
+        @keyframes popUp {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
         .main-btn { 
             width: 100%; padding: 16px; font-size: 22px; border-radius: 30px; 
             background: var(--kanahei-rose); color: white; border: 4px solid var(--kanahei-brown); 
@@ -144,14 +133,12 @@
 
         .hidden { display: none !important; }
 
-        /* 反饋圖層 */
         #feedback-overlay {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 999; display: none; pointer-events: none;
         }
         #feedback-overlay img { width: 160px; }
 
-        /* 結算頁面 */
         #win-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(255, 255, 255, 0.95);
@@ -189,7 +176,12 @@
             <img src="https://lunakuo1719.github.io/kana-wunfa/heade_r.gif">
         </div>
         <h1 style="color: var(--kanahei-rose); margin:0 0 10px 0; font-size: 26px; text-align: center;">文法討伐團~捏！</h1>
-        <div style="background: var(--kanahei-cream); padding: 20px; border-radius: 25px; border: 3px solid var(--kanahei-brown); margin-bottom: 20px; text-align: center;">
+        
+        <div class="daily-tip-box">
+            💡 <b>長老的建議：</b><span id="tip-text">正在翻閱攻略本...</span>
+        </div>
+
+        <div style="background: var(--kanahei-cream); padding: 20px; border-radius: 25px; border: 3px solid var(--kanahei-brown); margin-bottom: 15px; text-align: center;">
             <p style="font-size:18px; margin:5px 0;">已熟練：<span id="mastered-count" style="color:var(--kanahei-rose)">0</span></p>
             <p style="font-size:18px; margin:5px 0;">錯題數：<span id="failed-count">0</span> | 貼紙：<span id="sticker-count">0</span>/80</p>
         </div>
@@ -200,7 +192,7 @@
 
     <div id="game-zone" class="hidden">
         <div style="display: flex; justify-content: space-between; font-size: 16px; color: var(--kanahei-brown); margin-top: 10px;">
-            <span>討伐進行中...</span>
+            <span id="mode-text">討伐進行中...</span>
             <span><span id="progress-num">0</span> / <span id="total-num">20</span></span>
         </div>
         <div class="progress-container">
@@ -213,19 +205,26 @@
     </div>
 </div>
 
+<script src="questions.js"></script>
+
 <script>
-// 此處 JavaScript 與上版本完全相同，確保功能無損
+// 如果 questions.js 沒讀到，提供幾題墊底防止當機
+if (typeof allQuestions === 'undefined') {
+    var allQuestions = [{ q: "請確認 questions.js 是否放在同資料夾？", opts: ["是", "否"], a: "是", note: "提示：請檢查檔案名稱與位置。" }];
+}
+
 const IMG_YES = "https://lunakuo1719.github.io/kana-wunfa/heartna.gif";
 const IMG_WRONG = "https://lunakuo1719.github.io/kana-wunfa/Wrong.gif";
 const STICKERS_NORMAL = Array.from({length: 70}, (_, i) => `https://lunakuo1719.github.io/kana-wunfa/stickers/${String(i+1).padStart(2, '0')}.jpg`);
 const STICKERS_SPECIAL = Array.from({length: 10}, (_, i) => `https://lunakuo1719.github.io/kana-wunfa/stickers/special/${String(i+1).padStart(2, '0')}.jpg`);
 
-const allQuestions = [
-    { q: "This is _______ elephant.", opts: ["a", "an", "X", "the"], a: "an", note: "中文翻譯：這是一隻大象。" },
-    { q: "His sons _______ good boys.", opts: ["is", "are", "do", "have"], a: "are", note: "中文翻譯：他的兒子們是好男孩。" },
-    { q: "_______ house is beautiful.", opts: ["I", "My", "Me", "Mine"], a: "My", note: "中文翻譯：我的房子很漂亮。" },
-    { q: "I _______ a teacher.", opts: ["am", "is", "were", "be"], a: "am", note: "中文翻譯：我是一位老師。" },
-    { q: "The moon _______ yellow.", opts: ["was", "were", "is", "am"], a: "is", note: "中文翻譯：月亮是黃色的。" }
+const grammarTips = [
+    "過去進行式 (was/were + V-ing) 常出現在 When 之後，描述當時「正在進行」的事喔！",
+    "看到 Since (自從...)，通常就要召喚「現在完成式 (have/has + p.p.)」來幫忙！捏！",
+    "一般動詞的否定句要請助動詞 (Do/Does/Did) 出馬，不能直接加 not 喔！",
+    "被動語態 (被...) 一定要有 be 動詞 + 過去分詞 (p.p.)，缺一不可！",
+    "動詞要當主詞時，記得穿上 V-ing 或 To-V 的外衣，才不會感冒喔！",
+    "形容「事物」讓人感覺如何用 -ing (interesting)，形容「人」的感覺用 -ed (interested)！"
 ];
 
 let userData = JSON.parse(localStorage.getItem('kana_v9')) || { mastered: 0, currentLevel: 0, failed_list: [], stickers: [] };
@@ -240,10 +239,14 @@ function init() {
     document.getElementById('sticker-count').innerText = userData.stickers.length;
     const btn = document.getElementById('retry-btn');
     btn.style.display = (userData.failed_list && userData.failed_list.length > 0) ? "inline-block" : "none";
+    
+    // 隨機顯示長老語錄
+    document.getElementById('tip-text').innerText = grammarTips[Math.floor(Math.random() * grammarTips.length)];
 }
 
 function startLevel() {
     isRetryMode = false;
+    document.getElementById('mode-text').innerText = "正式討伐中...";
     const startIdx = (userData.currentLevel % Math.ceil(allQuestions.length/20)) * 20;
     currentGroup = allQuestions.slice(startIdx, startIdx + 20).sort(() => Math.random() - 0.5);
     setupGame();
@@ -251,6 +254,7 @@ function startLevel() {
 
 function startRetry() {
     isRetryMode = true;
+    document.getElementById('mode-text').innerText = "錯題補考中...";
     currentGroup = [...userData.failed_list].sort(() => Math.random() - 0.5);
     setupGame();
 }
@@ -269,16 +273,23 @@ function renderQuestion() {
     if (currentGroup.length === 0) return finishLevel();
     const data = currentGroup[0];
     document.getElementById('q-text').innerText = data.q;
-    document.getElementById('hint-text').innerText = data.note;
+    
+    // 預備攻略筆記內容 (先隱藏)
+    document.getElementById('hint-text').innerText = data.note || "這題很簡單，相信你可以的！捏！";
     document.getElementById('hint-area').classList.add('hidden');
+    
     const area = document.getElementById('choices-area');
     area.innerHTML = "";
-    data.opts.forEach(opt => {
+    
+    // 如果題庫是用 opts 或 options 都能相容
+    const choices = data.opts || data.options;
+    choices.forEach(opt => {
         const b = document.createElement('button');
         b.className = "btn-choice"; b.innerText = opt;
         b.onclick = () => handleSelect(opt, b);
         area.appendChild(b);
     });
+    
     const solved = totalInGroup - currentGroup.length;
     document.getElementById('progress-num').innerText = solved;
     const p = (solved/totalInGroup)*100;
@@ -291,32 +302,51 @@ function handleSelect(opt, b) {
     isLocked = true;
     const cur = currentGroup[0];
     const choices = document.querySelectorAll('.btn-choice');
+    
+    // 無論對錯，都顯示攻略筆記
     document.getElementById('hint-area').classList.remove('hidden');
 
     if (opt === cur.a) {
         document.getElementById('feedback-img').src = IMG_YES + "?t=" + Date.now();
         document.getElementById('feedback-overlay').style.display = "block";
         b.style.backgroundColor = "#b2cecf"; 
-        if (isRetryMode) userData.failed_list = userData.failed_list.filter(item => item.q !== cur.q);
-        else userData.mastered++;
+        
+        if (isRetryMode) {
+            userData.failed_list = userData.failed_list.filter(item => item.q !== cur.q);
+        } else {
+            userData.mastered++;
+        }
+        
         setTimeout(() => {
             document.getElementById('feedback-overlay').style.display = "none";
             currentGroup.shift();
             saveData();
             renderQuestion();
-        }, 1200);
+        }, 1500); // 留一點時間看攻略
     } else {
         document.getElementById('feedback-img').src = IMG_WRONG + "?t=" + Date.now();
         document.getElementById('feedback-overlay').style.display = "block";
         b.style.backgroundColor = "#eee";
         b.style.color = "#aaa";
-        choices.forEach(btn => { if (btn.innerText === cur.a) { btn.style.backgroundColor = "var(--kanahei-rose)"; btn.style.color="white"; } });
-        if (!isRetryMode && !userData.failed_list.some(item => item.q === cur.q)) userData.failed_list.push(cur);
+        
+        // 顯示正確答案
+        choices.forEach(btn => { 
+            if (btn.innerText === cur.a) { 
+                btn.style.backgroundColor = "var(--kanahei-rose)"; 
+                btn.style.color="white"; 
+            } 
+        });
+
+        if (!isRetryMode && !userData.failed_list.some(item => item.q === cur.q)) {
+            userData.failed_list.push(cur);
+        }
+
         setTimeout(() => {
             document.getElementById('feedback-overlay').style.display = "none";
+            // 答錯的話移到隊伍最後面，等等再挑戰一次
             currentGroup.push(currentGroup.shift());
             renderQuestion();
-        }, 2000);
+        }, 2500); // 答錯留久一點看筆記
     }
 }
 
@@ -325,9 +355,11 @@ function finishLevel() {
     const pool = isSpecial ? STICKERS_SPECIAL : STICKERS_NORMAL;
     const winUrl = pool[Math.floor(Math.random() * pool.length)];
     if (!userData.stickers.includes(winUrl)) userData.stickers.push(winUrl);
+    
     document.getElementById('reward-img').src = winUrl;
     document.getElementById('win-msg').innerText = isSpecial ? "✨ 驚喜稀有貼紙入手！捏！ ✨" : "獲得新貼紙！捏！";
     document.getElementById('win-overlay').style.display = "flex";
+    
     if (!isRetryMode) userData.currentLevel++;
     saveData();
 }
