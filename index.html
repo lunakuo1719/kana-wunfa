@@ -1,5 +1,8 @@
-<!DOCTYPE html><html lang="zh-Hant"><head>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
     <meta charset="UTF-8">
+    <!-- 針對 iPhone 14 與各類手機的最佳化設定 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <link rel="apple-touch-icon" href="https://lunakuo1719.github.io/kana-wunfa/nanaicon.png">
@@ -19,12 +22,13 @@
         * { 
             box-sizing: border-box; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            font-weight: 900; /* 全面加粗提高閱讀力 */
+            font-weight: 700; 
             -webkit-tap-highlight-color: transparent; 
         }
 
         body { 
             margin: 0; 
+            /* 針對 iPhone 瀏海與動態島的安全距離設定 */
             padding: env(safe-area-inset-top) 15px env(safe-area-inset-bottom) 15px;
             background: linear-gradient(135deg, var(--kanahei-pink) 0%, #fff0f5 100%); 
             display: flex; 
@@ -32,116 +36,146 @@
             justify-content: center; 
             align-items: center; 
             min-height: 100vh;
-            overflow-x: hidden;
+            overscroll-behavior-y: none;
         }
 
         .card {
             width: 100%;
-            max-width: 500px; /* 稍微放寬卡片 */
-            height: 82vh;
+            /* 電腦版限制最大寬度，讓它看起來像個 App，不會被拉太長 */
+            max-width: 480px; 
+            height: 85vh; 
             max-height: 900px; 
             background: white;
             border: 5px solid var(--kanahei-brown);
-            border-radius: 45px; 
+            border-radius: 40px; 
             padding: 25px;
             box-shadow: 0px 10px 30px rgba(240, 98, 146, 0.25);
             position: relative;
             display: flex;
             flex-direction: column;
             z-index: 2;
+            overflow-y: auto; 
+            overflow-x: hidden;
         }
 
-        /* 需求1：加大主畫面 GIF */
+        /* 修改需求1：只放兩張圖的排版 */
         .header-gifs { 
-            display: flex; justify-content: center; align-items: flex-end; 
-            gap: 15px; margin: 0px 0 15px 0;
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-end; 
+            gap: 20px; /* 增加一點間距 */
+            margin: 0px 0 15px 0;
+            flex-shrink: 0; 
         }
-        .header-gifs img { width: 30%; height: auto; max-width: 110px; }
-        .header-gifs img:nth-child(2) { width: 45%; max-width: 150px; } /* 中間主圖最大 */
+        
+        .header-gifs img { 
+            width: 40%; /* 兩張圖各佔 40%，看起來比較平衡 */
+            height: auto; 
+            max-width: 140px; 
+            object-fit: contain;
+        }
 
         .daily-tip-box {
             background: white; border: 3px solid var(--kanahei-rose);
             border-radius: 15px; padding: 15px; margin-bottom: 15px;
-            font-size: 20px; color: var(--kanahei-brown); line-height: 1.5;
+            font-size: 18px; color: var(--kanahei-brown); line-height: 1.5;
             box-shadow: inset 0 0 10px var(--kanahei-pink);
+            flex-shrink: 0;
         }
 
-        .progress-container { margin: 10px 0 35px 0; position: relative; height: 50px; }
+        /* 進度條容器：增加左右 padding 避免圖片被切掉 */
+        .progress-container { 
+            margin: 10px 0 35px 0; 
+            position: relative; 
+            height: 50px; 
+            flex-shrink: 0; 
+            padding: 0 30px; /* 左右留白給 Piske */
+        }
         
-        /* 依約定更新的進度條圖案 */
         .piske-runner { 
-            position: absolute; bottom: 12px; width: 75px; 
-            transition: left 0.3s; margin-left: -37px; z-index: 10;
+            position: absolute; 
+            bottom: 12px; 
+            width: 75px; 
+            transition: left 0.3s ease-out; 
+            /* 修正：不再使用負 margin，改用 transform 置中，避免起始位置錯誤 */
+            transform: translateX(-50%); 
+            z-index: 10;
         }
 
         .bar-outer { 
             height: 20px; background: var(--kanahei-cream); 
             border: 3px solid var(--kanahei-brown); border-radius: 15px; 
-            width: 100%; position: absolute; bottom: 0;
+            width: 100%; position: absolute; bottom: 0; left: 0;
+            overflow: hidden;
         }
-        .bar-inner { height: 100%; width: 0%; background: var(--kanahei-rose); transition: width 0.3s; }
+        /* 調整 bar-outer 的寬度，配合 container 的 padding */
+        .progress-container .bar-outer {
+            width: calc(100% - 60px); /* 扣掉左右 padding */
+            left: 30px;
+        }
 
-        /* 需求2：極大化字體 */
+        .bar-inner { height: 100%; width: 0%; background: var(--kanahei-rose); transition: width 0.3s ease-out; }
+
         .q-box { 
-            font-size: 28px; color: var(--kanahei-brown); 
+            font-size: 26px; color: var(--kanahei-brown); 
             margin-bottom: 20px; text-align: left; line-height: 1.4;
-            min-height: 80px;
+            min-height: 60px;
         }
 
         .btn-choice { 
             background: white; margin-bottom: 12px; font-size: 22px; 
             border: 3px solid var(--kanahei-brown); border-radius: 20px; 
-            width: 100%; padding: 18px; text-align: left; 
-            color: var(--kanahei-brown); box-shadow: 0 6px 0 #ddd;
+            width: 100%; padding: 15px 18px; text-align: left; 
+            color: var(--kanahei-brown); box-shadow: 0 5px 0 #ddd;
             transition: all 0.1s; cursor: pointer;
+            position: relative;
+            top: 0;
         }
-        .btn-choice:active { transform: translateY(3px); box-shadow: 0 2px 0 #ddd; }
+        .btn-choice:active { transform: translateY(5px); box-shadow: 0 0px 0 #ddd; }
+        .btn-choice:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: 0 5px 0 #ddd; }
+        /* 電腦版滑鼠懸停效果，增加互動感 */
+        @media (hover: hover) {
+            .btn-choice:hover:not(:disabled) {
+                background-color: #fff0f5;
+            }
+        }
 
         .translation-box { 
             background: var(--kanahei-cream); 
-            padding: 18px; border-radius: 20px; 
-            font-size: 20px; border: 3px solid var(--gold); 
+            padding: 15px; border-radius: 20px; 
+            font-size: 18px; border: 3px solid var(--gold); 
             color: var(--kanahei-brown); text-align: left;
             margin-top: auto; overflow-y: auto; max-height: 140px;
         }
 
         .main-btn { 
-            width: 100%; padding: 18px; font-size: 24px; border-radius: 40px; 
+            width: 100%; padding: 15px; font-size: 22px; border-radius: 40px; 
             background: var(--kanahei-rose); color: white; border: 4px solid var(--kanahei-brown); 
             box-shadow: 0 6px 0 var(--kanahei-brown); margin: 8px 0; cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .main-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--kanahei-brown); }
+
+        /* 收集冊與全螢幕覆蓋層 */
+        #collection-overlay, #win-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 2000; display: none; flex-direction: column;
+            padding: 20px;
         }
 
-/* 需求3：美化收集冊與背景 - 修正桌布顯示 */
-#collection-overlay {
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100vw; 
-    height: 100vh; 
-    z-index: 2000; 
-    display: none; 
-    flex-direction: column; 
-    
-    /* 背景圖設定：使用你提供的桌布 */
-    background-image: url('https://lunakuo1719.github.io/kana-wunfa/wallpaper/05.jpg');
-    background-size: cover;      /* 讓圖片填滿整個螢幕，不留白 */
-    background-position: center; /* 圖片置中 */
-    background-attachment: fixed;/* 讓背景固定，滑動時只有內容在動 */
-    overflow-y: auto;
-    padding: 20px;
-}
+        #collection-overlay {
+            background-image: url('https://lunakuo1719.github.io/kana-wunfa/wallpaper/05.jpg');
+            background-size: cover; background-position: center; background-attachment: fixed;
+            overflow-y: auto; 
+        }
 
-#collection-content {
-    /* 這裡稍微調高透明度(0.85)，讓後面的桌布隱約透出來 */
-    background: rgba(255, 255, 255, 0.85); 
-    border-radius: 35px; 
-    padding: 25px; 
-    border: 4px solid var(--kanahei-brown);
-    max-width: 600px; 
-    margin: 20px auto; /* 增加上下間距 */
-    width: 100%;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
+        #collection-content {
+            background: rgba(255, 255, 255, 0.9); 
+            border-radius: 35px; padding: 25px; 
+            border: 4px solid var(--kanahei-brown);
+            max-width: 600px; margin: 20px auto; width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
 
         .sticker-slot {
             aspect-ratio: 1; border: 3px dashed #ffc1e3; border-radius: 15px; 
@@ -149,45 +183,53 @@
             align-items: center; justify-content: center;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
         }
+        .sticker-slot img { width: 100%; height: 100%; object-fit: cover; }
 
-        .back-home-container { width: 100%; max-width: 450px; display: flex; justify-content: center; padding: 10px 0; }
-        .back-btn-gif { width: 90px; height: auto; cursor: pointer; animation: floating 3s infinite; }
-        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
+        /* 舊的返回鍵樣式已移除 */
         .hidden { display: none !important; }
-        #feedback-overlay img { width: 200px; }
-    </style></head><body>
+        #feedback-overlay img { width: 220px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
+    </style>
+</head>
+<body>
 
-<div id="feedback-overlay" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 999; display: none;"><img id="feedback-img" src=""></div>
-
-<div id="win-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.95); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; padding: 20px;" onclick="location.reload()">
-    <h2 style="color: var(--kanahei-rose); font-size: 26px;">獲得新貼紙！捏！</h2>
-    <img id="reward-img" style="width: 85%; max-width: 320px; border: 5px solid var(--kanahei-brown); border-radius: 20px;" src="">
-    <h1 style="color: var(--kanahei-brown); font-size: 30px;">攻略成功！捏！</h1>
+<!-- 回饋動畫層 -->
+<div id="feedback-overlay" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 999; display: none;">
+    <img id="feedback-img" src="">
 </div>
 
+<!-- 獲獎畫面 -->
+<div id="win-overlay" style="background: rgba(255, 255, 255, 0.95); justify-content: center; align-items: center;" onclick="location.reload()">
+    <h2 style="color: var(--kanahei-rose); font-size: 26px;">獲得新貼紙！捏！</h2>
+    <img id="reward-img" style="width: 85%; max-width: 320px; border: 5px solid var(--kanahei-brown); border-radius: 20px;" src="" onerror="this.src='https://lunakuo1719.github.io/kana-wunfa/nanaicon.png'">
+    <h1 style="color: var(--kanahei-brown); font-size: 30px;">攻略成功！捏！</h1>
+    <p style="color: #888; font-size: 16px;">(點擊畫面重新開始)</p>
+</div>
+
+<!-- 收集冊 -->
 <div id="collection-overlay">
     <div id="collection-content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h2 style="color: var(--kanahei-rose); font-size: 28px; margin:0;">我的收集冊</h2>
-            <button onclick="document.getElementById('collection-overlay').style.display='none'" style="padding: 10px 20px; border-radius: 15px; border: 3px solid var(--kanahei-brown); background: var(--gold); font-size: 18px;">返回</button>
+            <button onclick="document.getElementById('collection-overlay').style.display='none'" style="padding: 8px 20px; border-radius: 15px; border: 3px solid var(--kanahei-brown); background: var(--gold); font-size: 18px; color: var(--kanahei-brown); font-weight: bold;">返回</button>
         </div>
         <div id="album-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;"></div>
     </div>
 </div>
 
 <div class="card">
+    <!-- 主畫面 -->
     <div id="dashboard">
+        <!-- 修改區域：Header只留兩張圖 -->
         <div class="header-gifs">
             <img src="https://lunakuo1719.github.io/kana-wunfa/heade-M.gif">
-            <img src="https://lunakuo1719.github.io/kana-wunfa/xmas.gif">
+            <!-- 移除了中間的 xmas.gif，讓畫面更清爽 -->
             <img src="https://lunakuo1719.github.io/kana-wunfa/heade_r.gif">
         </div>
         <h1 style="color: var(--kanahei-rose); margin:0 0 15px 0; font-size: 32px; text-align: center;">文法討伐團~捏！</h1>
         
         <div class="daily-tip-box">💡 <b>長老的建議：</b><br><span id="tip-text">正在翻閱攻略本...</span></div>
 
-        <div style="background: var(--kanahei-cream); padding: 15px; border-radius: 25px; border: 3px solid var(--kanahei-brown); margin-bottom: 10px; text-align: center;">
+        <div style="background: var(--kanahei-cream); padding: 15px; border-radius: 25px; border: 3px solid var(--kanahei-brown); margin-bottom: 15px; text-align: center;">
             <p style="font-size:20px; margin:5px 0;">已熟練：<span id="mastered-count" style="color:var(--kanahei-rose)">0</span></p>
             <p style="font-size:20px; margin:5px 0;">錯題數：<span id="failed-count">0</span> | 貼紙：<span id="sticker-count">0</span>/80</p>
         </div>
@@ -196,12 +238,26 @@
         <button class="main-btn" style="background:#ffd54f;" onclick="openAlbum()">我的收集冊</button>
     </div>
 
-    <div id="game-zone" class="hidden">
-        <div style="display: flex; justify-content: space-between; font-size: 20px; color: var(--kanahei-brown);">
+    <!-- 遊戲區 -->
+    <div id="game-zone" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
+        <!-- Header：包含返回鍵與進度資訊 -->
+        <div style="position: relative; display: flex; justify-content: space-between; align-items: center; font-size: 20px; color: var(--kanahei-brown); flex-shrink: 0; margin-bottom: 5px; height: 40px;">
             <span id="mode-text">進行中...</span>
-            <span><span id="progress-num">0</span> / <span id="total-num">20</span></span>
+            
+            <!-- 增加右邊距，避免被絕對定位的返回鍵擋住 -->
+            <div style="margin-right: 55px;">
+                <span id="progress-num">0</span> / <span id="total-num">20</span>
+            </div>
+
+            <!-- 返回鍵：絕對定位在右上角 -->
+            <img src="https://lunakuo1719.github.io/kana-wunfa/backhome.png" 
+                 onclick="location.reload()"
+                 style="position: absolute; right: -10px; top: 0; width: 50px; cursor: pointer; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.1));"
+                 title="回到主畫面">
         </div>
+
         <div class="progress-container">
+            <!-- 已確認使用您新的 GIF -->
             <img id="piske-img" src="https://lunakuo1719.github.io/kana-wunfa/cutepi.gif" class="piske-runner">
             <div class="bar-outer"><div class="bar-inner" id="progress-bar"></div></div>
         </div>
@@ -211,15 +267,25 @@
     </div>
 </div>
 
-<div id="back-home-wrapper" class="back-home-container hidden">
-    <img src="https://lunakuo1719.github.io/kana-wunfa/backhome.gif" class="back-btn-gif" onclick="location.reload()">
-</div>
+<!-- 舊的返回鍵 wrapper 已刪除 -->
 
 <script>
-// [題庫與邏輯部分保持不變]
+// 題庫與邏輯部分維持原樣
 const allQuestions = [
-    { q: "This is _______ elephant.", options: ["a", "an", "X", "the"], a: "an", note: "這是一隻大象。" },
-    { q: "His sons _______ good boys.", options: ["is", "are", "do", "have"], a: "are", note: "他的兒子們是好男孩。" },
+   { q: "This is _______ elephant.", options: ["a", "an", "X", "the"], a: "an", note: "這是一隻大象。" },
+   { q: "His sons _______ good boys.", options: ["is", "are", "do", "have"], a: "are", note: "他的兒子們是好男孩。" },
+   { q: "The moon _______ yellow.", options: ["was", "were", "is", "am"], a: "is", note: "中文翻譯：月亮是黃色的。" },
+   { q: "They _______ students.", options: ["is", "are", "be", "am"], a: "are", note: "中文翻譯：他們是學生。" },
+   { q: "She _______ a doctor.", options: ["do", "does", "are", "is"], a: "is", note: "中文翻譯：她是一位醫生。" },
+   { q: "He _______ many books.", options: ["is", "be", "have", "has"], a: "has", note: "中文翻譯：他有很多書。" },
+   { q: "We _______ many pens.", options: ["is", "be", "have", "has"], a: "have", note: "中文翻譯：我們有很多筆。" },
+   { q: "A teacher works in a _______.", options: ["school", "ship", "car", "train"], a: "school", note: "中文翻譯：老師在學校裡工作。" },
+   { q: "Choose the correct sentence:", options: ["I like to play the piano.", "I like play the piano."], a: "I like to play the piano.", note: "中文翻譯：我喜歡彈鋼琴。 (文法重點：like 後面接動詞需用不定詞 to+V 或動名詞 V-ing)" },
+   { q: "Choose the correct sentence:", options: ["He swim every day.", "He swims every day."], a: "He swims every day.", note: "中文翻譯：他每天游泳。 (文法重點：主詞為第三人稱單數 He，現在式一般動詞需加 s)" },
+   { q: "Choose the correct sentence:", options: ["I not his student.", "I am not his student."], a: "I am not his student.", note: "中文翻譯：我不是他的學生。 (文法重點：英文句子必須有動詞，be 動詞否定句直接在後面加 not)" },
+   { q: "Choose the correct sentence:", options: ["My father likes to play the violin.", "My father likes to playing violin."], a: "My father likes to play the violin.", note: "中文翻譯：我父親喜歡拉小提琴。 (文法重點：不定詞 to 後面必須接原形動詞)" },
+   { q: "Choose the correct sentence:", options: ["He can swims.", "He can swim."], a: "He can swim.", note: "中文翻譯：他會游泳。 (文法重點：助動詞 can 後面必須接原形動詞，不可加 s)" },
+   { q: "Choose the correct sentence:", options: ["He hates eat fish.", "He hates to eat fish."], a: "He hates to eat fish.", note: "中文翻譯：他討厭吃魚。 (文法重點：hate 後面接動詞需用不定詞 to+V 或動名詞 V-ing)" },
 ];
 
 const IMG_YES = "https://lunakuo1719.github.io/kana-wunfa/heartna.gif";
@@ -238,18 +304,32 @@ function init() {
     document.getElementById('failed-count').innerText = userData.failed_list.length;
     document.getElementById('sticker-count').innerText = userData.stickers.length;
     document.getElementById('retry-btn').style.display = (userData.failed_list.length > 0) ? "inline-block" : "none";
-    document.getElementById('tip-text').innerText = "多看攻略筆記，討伐事半功倍捏！";
+    
+    // 隨機提示
+    const tips = ["多看攻略筆記，討伐事半功倍捏！", "每天練習一點點，英文就會變強喔！", "遇到不會的題目，猜錯也沒關係捏！"];
+    document.getElementById('tip-text').innerText = tips[Math.floor(Math.random()*tips.length)];
 }
 
 function startLevel() {
     isRetryMode = false;
-    const startIdx = (userData.currentLevel % Math.ceil(allQuestions.length/20)) * 20;
-    currentGroup = allQuestions.slice(startIdx, startIdx + 20).sort(() => Math.random() - 0.5);
+    document.getElementById('mode-text').innerText = "討伐進行中...";
+    const totalQ = allQuestions.length;
+    const batchSize = 20;
+    const maxLevels = Math.ceil(totalQ / batchSize);
+    const startIdx = (userData.currentLevel % maxLevels) * batchSize;
+    
+    currentGroup = allQuestions.slice(startIdx, startIdx + batchSize);
+    if(currentGroup.length === 0) {
+        userData.currentLevel = 0;
+        currentGroup = allQuestions.slice(0, batchSize);
+    }
+    currentGroup = currentGroup.sort(() => Math.random() - 0.5);
     setupGame();
 }
 
 function startRetry() {
     isRetryMode = true;
+    document.getElementById('mode-text').innerText = "錯題特訓中...";
     currentGroup = [...userData.failed_list].sort(() => Math.random() - 0.5);
     setupGame();
 }
@@ -259,13 +339,17 @@ function setupGame() {
     document.getElementById('total-num').innerText = totalInGroup;
     document.getElementById('dashboard').classList.add('hidden');
     document.getElementById('game-zone').classList.remove('hidden');
-    document.getElementById('back-home-wrapper').classList.remove('hidden');
+    document.getElementById('game-zone').style.display = 'flex';
+    // 隱藏舊的返回鍵 container，以防萬一
+    const oldBack = document.getElementById('back-home-wrapper');
+    if(oldBack) oldBack.classList.add('hidden');
     renderQuestion();
 }
 
 function renderQuestion() {
     isLocked = false;
     if (currentGroup.length === 0) return finishLevel();
+    
     const data = currentGroup[0];
     document.getElementById('q-text').innerText = data.q;
     document.getElementById('hint-text').innerText = data.note || "加油！捏！";
@@ -273,23 +357,34 @@ function renderQuestion() {
     
     const area = document.getElementById('choices-area');
     area.innerHTML = "";
+    
     (data.options || []).forEach(opt => {
         const b = document.createElement('button');
-        b.className = "btn-choice"; b.innerText = opt;
+        b.className = "btn-choice"; 
+        b.innerText = opt;
         b.onclick = () => handleSelect(opt, b);
         area.appendChild(b);
     });
     
     const solved = totalInGroup - currentGroup.length;
     document.getElementById('progress-num').innerText = solved;
-    const p = (solved/totalInGroup)*100;
+    
+    let p = 0;
+    if(totalInGroup > 0) p = (solved/totalInGroup)*100;
+    p = Math.min(p, 100);
+    
     document.getElementById('progress-bar').style.width = p + "%";
-    document.getElementById('piske-img').style.left = p + "%";
+    // 修正：因為 CSS 已經有 translateX(-50%)，這裡只要設定 left 為百分比即可，不用再手動扣除寬度
+    document.getElementById('piske-img').style.left = p + "%"; 
 }
 
 function handleSelect(opt, b) {
     if (isLocked) return;
     isLocked = true;
+    
+    const allBtns = document.querySelectorAll('.btn-choice');
+    allBtns.forEach(btn => btn.disabled = true);
+
     const cur = currentGroup[0];
     document.getElementById('hint-area').classList.remove('hidden');
 
@@ -297,8 +392,11 @@ function handleSelect(opt, b) {
         document.getElementById('feedback-img').src = IMG_YES + "?t=" + Date.now();
         document.getElementById('feedback-overlay').style.display = "block";
         b.style.backgroundColor = "#b2cecf"; 
+        b.style.borderColor = "#4dd0e1";
+        
         if (isRetryMode) userData.failed_list = userData.failed_list.filter(item => item.q !== cur.q);
         else userData.mastered++;
+        
         setTimeout(() => {
             document.getElementById('feedback-overlay').style.display = "none";
             currentGroup.shift();
@@ -308,12 +406,18 @@ function handleSelect(opt, b) {
     } else {
         document.getElementById('feedback-img').src = IMG_WRONG + "?t=" + Date.now();
         document.getElementById('feedback-overlay').style.display = "block";
-        if (!isRetryMode && !userData.failed_list.some(item => item.q === cur.q)) userData.failed_list.push(cur);
+        b.style.backgroundColor = "#ffcdd2"; 
+        b.style.borderColor = "#ef5350";
+        
+        if (!isRetryMode && !userData.failed_list.some(item => item.q === cur.q)) {
+            userData.failed_list.push(cur);
+        }
+        
         setTimeout(() => {
             document.getElementById('feedback-overlay').style.display = "none";
             currentGroup.push(currentGroup.shift());
             renderQuestion();
-        }, 2000);
+        }, 2000); 
     }
 }
 
@@ -321,9 +425,12 @@ function finishLevel() {
     const isSpecial = Math.random() < 0.15;
     const pool = isSpecial ? STICKERS_SPECIAL : STICKERS_NORMAL;
     const winUrl = pool[Math.floor(Math.random() * pool.length)];
+    
     if (!userData.stickers.includes(winUrl)) userData.stickers.push(winUrl);
+    
     document.getElementById('reward-img').src = winUrl;
     document.getElementById('win-overlay').style.display = "flex";
+    
     if (!isRetryMode) userData.currentLevel++;
     saveData();
 }
@@ -331,16 +438,25 @@ function finishLevel() {
 function openAlbum() {
     const container = document.getElementById('album-container');
     container.innerHTML = "";
+    
     [...STICKERS_NORMAL, ...STICKERS_SPECIAL].forEach((url) => {
+        const hasIt = userData.stickers.includes(url);
         const item = document.createElement('div');
         item.className = "sticker-slot";
-        item.innerHTML = userData.stickers.includes(url) ? `<img src="${url}" style="width:100%;height:100%;object-fit:cover;">` : `<span style="color:#ffc1e3;font-size:24px;">?</span>`;
+        
+        if (hasIt) {
+            item.innerHTML = `<img src="${url}" onerror="this.style.display='none';this.parentNode.innerHTML='❌'">`;
+        } else {
+            item.innerHTML = `<span style="color:#ffc1e3;font-size:24px;">?</span>`;
+        }
         container.appendChild(item);
     });
     document.getElementById('collection-overlay').style.display = "flex";
 }
 
 function saveData() { localStorage.setItem('kana_v9', JSON.stringify(userData)); }
-init();
-</script></body></html>
 
+init();
+</script>
+</body>
+</html>
