@@ -45,7 +45,11 @@
             max-width: 480px; 
             height: 85vh; 
             max-height: 900px; 
-            background: white;
+            
+            /* 修改需求3：主畫面美化 */
+            /* 背景改成柔和的粉白漸層，不再是死白 */
+            background: linear-gradient(180deg, #ffffff 40%, #fff0f6 100%);
+            
             border: 5px solid var(--kanahei-brown);
             border-radius: 40px; 
             padding: 25px;
@@ -56,6 +60,21 @@
             z-index: 2;
             overflow-y: auto; 
             overflow-x: hidden;
+        }
+
+        /* 增加一個內部的虛線框，增加手作感/筆記本感 */
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 2px dashed #f8bbd0; /* 淡粉紅虛線 */
+            border-radius: 30px;
+            pointer-events: none; /* 讓虛線不會擋到點擊 */
+            z-index: 0;
+        }
+        /* 確保內容在虛線之上 */
+        .card > * {
+            z-index: 1;
         }
 
         /* 修改需求1：只放兩張圖的排版 */
@@ -169,8 +188,14 @@
             overflow-y: auto; 
         }
 
+        /* 修改需求1：收集冊背景透明度調整 */
         #collection-content {
-            background: rgba(255, 255, 255, 0.9); 
+            /* 從 0.9 改為 0.65，讓背景圖透出來 */
+            background: rgba(255, 255, 255, 0.65); 
+            /* 加入毛玻璃效果，讓字依然清晰，但背景模糊 */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            
             border-radius: 35px; padding: 25px; 
             border: 4px solid var(--kanahei-brown);
             max-width: 600px; margin: 20px auto; width: 100%;
@@ -209,7 +234,7 @@
 <div id="collection-overlay">
     <div id="collection-content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="color: var(--kanahei-rose); font-size: 28px; margin:0;">我的收集冊</h2>
+            <h2 style="color: var(--kanahei-brown); font-size: 28px; margin:0; text-shadow: 1px 1px 0 #fff;">我的收集冊</h2>
             <button onclick="document.getElementById('collection-overlay').style.display='none'" style="padding: 8px 20px; border-radius: 15px; border: 3px solid var(--kanahei-brown); background: var(--gold); font-size: 18px; color: var(--kanahei-brown); font-weight: bold;">返回</button>
         </div>
         <div id="album-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;"></div>
@@ -249,11 +274,20 @@
                 <span id="progress-num">0</span> / <span id="total-num">20</span>
             </div>
 
-            <!-- 返回鍵：絕對定位在右上角 -->
-            <img src="https://lunakuo1719.github.io/kana-wunfa/backhome.png" 
-                 onclick="location.reload()"
-                 style="position: absolute; right: -10px; top: 0; width: 50px; cursor: pointer; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.1));"
-                 title="回到主畫面">
+            <!-- 修改需求2：簡單一點的返回鍵 (使用純 CSS 樣式) -->
+            <button onclick="location.reload()" 
+                    style="position: absolute; right: 0; top: 0; 
+                           border: 2px solid var(--kanahei-brown); 
+                           background: var(--kanahei-cream); 
+                           border-radius: 12px; 
+                           padding: 5px 10px; 
+                           font-size: 18px; 
+                           cursor: pointer; 
+                           color: var(--kanahei-brown); 
+                           box-shadow: 0 3px 0 rgba(109, 76, 65, 0.2);
+                           display: flex; align-items: center; gap: 4px;">
+                🏠 <span style="font-size: 16px;">回首頁</span>
+            </button>
         </div>
 
         <div class="progress-container">
