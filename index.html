@@ -28,12 +28,13 @@
 
         body { 
             margin: 0; 
-            /* 針對 iPhone 瀏海與動態島的安全距離設定 */
             padding: env(safe-area-inset-top) 15px env(safe-area-inset-bottom) 15px;
             background: linear-gradient(135deg, var(--kanahei-pink) 0%, #fff0f5 100%); 
             display: flex; 
             flex-direction: column; 
-            justify-content: center; 
+            
+            /* 修正電腦版縮放跑版問題：改用 flex-start + margin: auto */
+            justify-content: flex-start; 
             align-items: center; 
             min-height: 100vh;
             overscroll-behavior-y: none;
@@ -41,15 +42,16 @@
 
         .card {
             width: 100%;
-            /* 電腦版限制最大寬度，讓它看起來像個 App，不會被拉太長 */
             max-width: 480px; 
             height: 85vh; 
             max-height: 900px; 
+            /* 增加最小高度，避免縮放時卡片變太扁 */
+            min-height: 600px;
             
-            /* 修改需求3：主畫面美化 */
-            /* 背景改成柔和的粉白漸層，不再是死白 */
+            /* 自動調整上下邊距，確保垂直置中，且縮放時不會被切掉 */
+            margin: auto;
+
             background: linear-gradient(180deg, #ffffff 40%, #fff0f6 100%);
-            
             border: 5px solid var(--kanahei-brown);
             border-radius: 40px; 
             padding: 25px;
@@ -62,33 +64,31 @@
             overflow-x: hidden;
         }
 
-        /* 增加一個內部的虛線框，增加手作感/筆記本感 */
+        /* 虛線框裝飾 */
         .card::before {
             content: "";
             position: absolute;
             top: 10px; left: 10px; right: 10px; bottom: 10px;
-            border: 2px dashed #f8bbd0; /* 淡粉紅虛線 */
+            border: 2px dashed #f8bbd0; 
             border-radius: 30px;
-            pointer-events: none; /* 讓虛線不會擋到點擊 */
+            pointer-events: none; 
             z-index: 0;
         }
-        /* 確保內容在虛線之上 */
         .card > * {
             z-index: 1;
         }
 
-        /* 修改需求1：只放兩張圖的排版 */
         .header-gifs { 
             display: flex; 
             justify-content: center; 
             align-items: flex-end; 
-            gap: 20px; /* 增加一點間距 */
+            gap: 20px; 
             margin: 0px 0 15px 0;
             flex-shrink: 0; 
         }
         
         .header-gifs img { 
-            width: 40%; /* 兩張圖各佔 40%，看起來比較平衡 */
+            width: 40%; 
             height: auto; 
             max-width: 140px; 
             object-fit: contain;
@@ -102,13 +102,12 @@
             flex-shrink: 0;
         }
 
-        /* 進度條容器：增加左右 padding 避免圖片被切掉 */
         .progress-container { 
             margin: 10px 0 35px 0; 
             position: relative; 
             height: 50px; 
             flex-shrink: 0; 
-            padding: 0 30px; /* 左右留白給 Piske */
+            padding: 0 30px; 
         }
         
         .piske-runner { 
@@ -116,7 +115,6 @@
             bottom: 12px; 
             width: 75px; 
             transition: left 0.3s ease-out; 
-            /* 修正：不再使用負 margin，改用 transform 置中，避免起始位置錯誤 */
             transform: translateX(-50%); 
             z-index: 10;
         }
@@ -127,9 +125,9 @@
             width: 100%; position: absolute; bottom: 0; left: 0;
             overflow: hidden;
         }
-        /* 調整 bar-outer 的寬度，配合 container 的 padding */
+        
         .progress-container .bar-outer {
-            width: calc(100% - 60px); /* 扣掉左右 padding */
+            width: calc(100% - 60px); 
             left: 30px;
         }
 
@@ -152,7 +150,6 @@
         }
         .btn-choice:active { transform: translateY(5px); box-shadow: 0 0px 0 #ddd; }
         .btn-choice:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: 0 5px 0 #ddd; }
-        /* 電腦版滑鼠懸停效果，增加互動感 */
         @media (hover: hover) {
             .btn-choice:hover:not(:disabled) {
                 background-color: #fff0f5;
@@ -175,7 +172,6 @@
         }
         .main-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--kanahei-brown); }
 
-        /* 收集冊與全螢幕覆蓋層 */
         #collection-overlay, #win-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: 2000; display: none; flex-direction: column;
@@ -188,14 +184,10 @@
             overflow-y: auto; 
         }
 
-        /* 修改需求1：收集冊背景透明度調整 */
         #collection-content {
-            /* 從 0.9 改為 0.65，讓背景圖透出來 */
             background: rgba(255, 255, 255, 0.65); 
-            /* 加入毛玻璃效果，讓字依然清晰，但背景模糊 */
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            
             border-radius: 35px; padding: 25px; 
             border: 4px solid var(--kanahei-brown);
             max-width: 600px; margin: 20px auto; width: 100%;
@@ -210,19 +202,35 @@
         }
         .sticker-slot img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* 舊的返回鍵樣式已移除 */
         .hidden { display: none !important; }
         #feedback-overlay img { width: 220px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
+        
+        /* 新增：方形返回按鈕樣式 */
+        .home-square-btn {
+            width: 42px; height: 42px;
+            background: white;
+            border: 3px solid var(--kanahei-brown);
+            border-radius: 12px;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer;
+            box-shadow: 0 3px 0 rgba(109, 76, 65, 0.2);
+            padding: 4px; /* 內距，讓圖片不要貼邊 */
+        }
+        .home-square-btn:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+        .home-square-btn img {
+            width: 100%; height: 100%; object-fit: contain;
+        }
     </style>
 </head>
 <body>
 
-<!-- 回饋動畫層 -->
 <div id="feedback-overlay" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 999; display: none;">
     <img id="feedback-img" src="">
 </div>
 
-<!-- 獲獎畫面 -->
 <div id="win-overlay" style="background: rgba(255, 255, 255, 0.95); justify-content: center; align-items: center;" onclick="location.reload()">
     <h2 style="color: var(--kanahei-rose); font-size: 26px;">獲得新貼紙！捏！</h2>
     <img id="reward-img" style="width: 85%; max-width: 320px; border: 5px solid var(--kanahei-brown); border-radius: 20px;" src="" onerror="this.src='https://lunakuo1719.github.io/kana-wunfa/nanaicon.png'">
@@ -230,7 +238,6 @@
     <p style="color: #888; font-size: 16px;">(點擊畫面重新開始)</p>
 </div>
 
-<!-- 收集冊 -->
 <div id="collection-overlay">
     <div id="collection-content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -242,12 +249,9 @@
 </div>
 
 <div class="card">
-    <!-- 主畫面 -->
     <div id="dashboard">
-        <!-- 修改區域：Header只留兩張圖 -->
         <div class="header-gifs">
             <img src="https://lunakuo1719.github.io/kana-wunfa/heade-M.gif">
-            <!-- 移除了中間的 xmas.gif，讓畫面更清爽 -->
             <img src="https://lunakuo1719.github.io/kana-wunfa/heade_r.gif">
         </div>
         <h1 style="color: var(--kanahei-rose); margin:0 0 15px 0; font-size: 32px; text-align: center;">文法討伐團~捏！</h1>
@@ -263,35 +267,23 @@
         <button class="main-btn" style="background:#ffd54f;" onclick="openAlbum()">我的收集冊</button>
     </div>
 
-    <!-- 遊戲區 -->
     <div id="game-zone" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
-        <!-- Header：包含返回鍵與進度資訊 -->
-        <div style="position: relative; display: flex; justify-content: space-between; align-items: center; font-size: 20px; color: var(--kanahei-brown); flex-shrink: 0; margin-bottom: 5px; height: 40px;">
+        <!-- Header 修改：分為左、中、右三個區塊 -->
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 20px; color: var(--kanahei-brown); flex-shrink: 0; margin-bottom: 5px; height: 45px;">
             <span id="mode-text">進行中...</span>
             
-            <!-- 增加右邊距，避免被絕對定位的返回鍵擋住 -->
-            <div style="margin-right: 55px;">
+            <!-- 中間的方形返回按鈕 -->
+            <button class="home-square-btn" onclick="location.reload()" title="回到主畫面">
+                <!-- 放入您的圖片，會自動符合方塊尺寸 -->
+                <img src="https://lunakuo1719.github.io/kana-wunfa/backhome.png">
+            </button>
+            
+            <div>
                 <span id="progress-num">0</span> / <span id="total-num">20</span>
             </div>
-
-            <!-- 修改需求2：簡單一點的返回鍵 (使用純 CSS 樣式) -->
-            <button onclick="location.reload()" 
-                    style="position: absolute; right: 0; top: 0; 
-                           border: 2px solid var(--kanahei-brown); 
-                           background: var(--kanahei-cream); 
-                           border-radius: 12px; 
-                           padding: 5px 10px; 
-                           font-size: 18px; 
-                           cursor: pointer; 
-                           color: var(--kanahei-brown); 
-                           box-shadow: 0 3px 0 rgba(109, 76, 65, 0.2);
-                           display: flex; align-items: center; gap: 4px;">
-                🏠 <span style="font-size: 16px;">回首頁</span>
-            </button>
         </div>
 
         <div class="progress-container">
-            <!-- 已確認使用您新的 GIF -->
             <img id="piske-img" src="https://lunakuo1719.github.io/kana-wunfa/cutepi.gif" class="piske-runner">
             <div class="bar-outer"><div class="bar-inner" id="progress-bar"></div></div>
         </div>
@@ -300,8 +292,6 @@
         <div id="hint-area" class="translation-box hidden"><span id="hint-text"></span></div>
     </div>
 </div>
-
-<!-- 舊的返回鍵 wrapper 已刪除 -->
 
 <script>
 // 題庫與邏輯部分維持原樣
